@@ -1,15 +1,19 @@
-// app/index.js
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
 import { Link } from 'expo-router';
 
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>¡Hola desde Expo Router!</Text>
-      <Text>Esta es mi pantalla de inicio (index.js).</Text>
-      {/* Ejemplo de enlace a otra pantalla (deberías crear app/otra.js) */}
-      {/* <Link href="/otra">Ir a otra página</Link> */}
+      <Text style={styles.title}>¡Pantalla de búsqueda funcionando!</Text>
+
+      <Link href="/favorites" asChild>
+        <Button title="Ver Favoritos" />
+      </Link>
+
+      <Link href="/receta/52772" asChild>
+        <Button title="Ver receta de prueba (ID 52772)" />
+      </Link>
     </View>
   );
 }
