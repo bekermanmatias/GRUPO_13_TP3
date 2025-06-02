@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { View, Text, TextInput, ScrollView, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, ScrollView, StyleSheet, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import CategoryChips from '../components/CategoryChips';
 import RecipeCard from '../components/RecipeCard';
@@ -8,6 +9,7 @@ import RecipeCard from '../components/RecipeCard';
 const categories = ['All', 'Beef', 'Chicken', 'Dessert', 'Lamb', 'Pasta', 'Seafood', 'Vegan', 'Vegetarian'];
 
 export default function SearchScreen() {
+  const sampleRecipe = { idMeal: '12345', strMeal: 'Pizza Margarita' };
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [recipes, setRecipes] = useState([]);
