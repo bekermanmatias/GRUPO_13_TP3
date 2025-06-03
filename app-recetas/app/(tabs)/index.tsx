@@ -119,6 +119,8 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: '#333',
+    borderWidth: 0, 
+    outlineColor: '#eef5ef',
   },
   sectionTitle: {
     fontSize: 16,

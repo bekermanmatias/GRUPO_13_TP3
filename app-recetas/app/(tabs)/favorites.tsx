@@ -18,19 +18,20 @@ export default function Favorites() {
       const parsed = stored ? JSON.parse(stored) : [];
       setFavorites(parsed);
     };
-    const unsubscribe = loadFavorites();
-    return () => { unsubscribe; };
+    loadFavorites();
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Recetas Favoritas</Text>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 20 }}>
+      <Text style={styles.title}>Favorites</Text>
       {favorites.length > 0 ? (
-        favorites.map((recipe) => (
-          <RecipeCard key={recipe.idMeal} recipe={recipe} />
-        ))
+        <View style={styles.grid}>
+          {favorites.map((recipe) => (
+            <RecipeCard key={recipe.idMeal} recipe={recipe} />
+          ))}
+        </View>
       ) : (
-        <Text>No hay recetas favoritas aún.</Text>
+        <Text style={styles.noResults}> Favorites   </Text>
       )}
     </ScrollView>
   );
@@ -38,11 +39,26 @@ export default function Favorites() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    backgroundColor: '#F8FFFA',
+    paddingHorizontal: 20,
+    flex: 1,
   },
   title: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  noResults: {
+    fontSize: 16,
+    color: '#888',
+    fontStyle: 'italic',
+    marginVertical: 10,
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 12, 
   },
 });
