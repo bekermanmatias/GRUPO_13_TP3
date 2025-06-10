@@ -77,7 +77,7 @@ const Ingredients = () => {
 
   const searchRecipesByIngredients = async () => {
     if (selectedIngredients.length === 0) {
-      Alert.alert('Atención', 'Selecciona al menos un ingrediente');
+      Alert.alert('Attention', 'Please select at least one ingredient');
       return;
     }
 
@@ -87,11 +87,11 @@ const Ingredients = () => {
       setSearchResults(recipes);
       
       if (recipes.length === 0) {
-        Alert.alert('Sin resultados', 'No se encontraron recetas con estos ingredientes');
+        Alert.alert('No results', 'No recipes found with these ingredients');
       }
     } catch (error) {
       console.error('Error searching recipes:', error);
-      Alert.alert('Error', 'No se pudieron buscar las recetas');
+      Alert.alert('Error', 'Could not search for recipes');
     }
     setLoadingRecipes(false);
   };
@@ -139,7 +139,7 @@ const Ingredients = () => {
         <Text style={styles.recipeCategory}>{item.strCategory}</Text>
         {item.matchingIngredients && (
           <Text style={styles.matchingIngredients}>
-            {item.matchingIngredients} ingrediente(s) coincidente(s)
+            {item.matchingIngredients} ingredient(s) matched
           </Text>
         )}
       </View>
@@ -148,12 +148,12 @@ const Ingredients = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Buscar por Ingredientes</Text>
+      <Text style={styles.title}>Ingredients</Text>
       
-      {/* Ingredientes seleccionados */}
+      {/* Selected ingredients */}
       {selectedIngredients.length > 0 && (
         <View style={styles.selectedSection}>
-          <Text style={styles.sectionTitle}>Ingredientes Seleccionados:</Text>
+          <Text style={styles.sectionTitle}>Selected Ingredients:</Text>
           <FlatList
             horizontal
             data={selectedIngredients}
@@ -170,26 +170,26 @@ const Ingredients = () => {
             {loadingRecipes ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={styles.searchButtonText}>Buscar Recetas</Text>
+              <Text style={styles.searchButtonText}>Search Recipes</Text>
             )}
           </TouchableOpacity>
         </View>
       )}
 
-      {/* Buscador de ingredientes */}
+      {/* Ingredients search */}
       <View style={styles.searchSection}>
-        <Text style={styles.sectionTitle}>Agregar Ingredientes:</Text>
+        <Text style={styles.sectionTitle}>Add Ingredients:</Text>
         <TextInput
           style={styles.searchInput}
-          placeholder="Buscar ingrediente..."
+          placeholder="Search ingredient..."
           value={searchText}
           onChangeText={setSearchText}
         />
       </View>
 
-      {/* Lista de ingredientes disponibles */}
+      {/* Available ingredients list */}
       {loading ? (
-        <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />
+        <ActivityIndicator size="large" color="#4CAF50" style={styles.loader} />
       ) : (
         <FlatList
           data={searchText ? filteredIngredients : commonIngredients}
@@ -200,10 +200,10 @@ const Ingredients = () => {
         />
       )}
 
-      {/* Resultados de recetas */}
+      {/* Recipe results */}
       {searchResults.length > 0 && (
         <View style={styles.resultsSection}>
-          <Text style={styles.sectionTitle}>Recetas Encontradas:</Text>
+          <Text style={styles.sectionTitle}>Found Recipes:</Text>
           <FlatList
             data={searchResults}
             renderItem={renderRecipeItem}
@@ -223,10 +223,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
+    marginTop: 20,
+    marginBottom: 10,
+    textAlign: 'left',
   },
   selectedSection: {
     marginBottom: 20,
@@ -257,7 +258,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   searchButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#4CAF50',
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
@@ -293,7 +294,7 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   selectedIngredient: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#4CAF50',
   },
   ingredientText: {
     fontSize: 14,
@@ -339,7 +340,7 @@ const styles = StyleSheet.create({
   },
   matchingIngredients: {
     fontSize: 12,
-    color: '#007AFF',
+    color: '#4CAF50',
     fontStyle: 'italic',
   },
 });
