@@ -1,8 +1,13 @@
-// app/(tabs)/_layout.tsx
+import { useEffect } from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { initDatabase } from '../../database/database';
 
 export default function TabsLayout() {
+  useEffect(() => {
+    initDatabase();
+  }, []);
+
   return (
     <Tabs
       screenOptions={{
@@ -52,6 +57,16 @@ export default function TabsLayout() {
           title: 'Profile',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      {/* Agregamos nueva tab para ingredientes */}
+      <Tabs.Screen
+        name="ingredients"
+        options={{
+          title: 'Ingredientes',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="restaurant-outline" size={size} color={color} />
           ),
         }}
       />
