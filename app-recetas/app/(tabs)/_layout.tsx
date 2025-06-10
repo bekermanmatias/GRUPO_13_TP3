@@ -1,8 +1,13 @@
-// app/(tabs)/_layout.tsx
+import { useEffect } from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { initDatabase } from '../../database/database';
 
 export default function TabsLayout() {
+  useEffect(() => {
+    initDatabase();
+  }, []);
+
   return (
     <Tabs
       screenOptions={{
@@ -33,11 +38,11 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="search"
+        name="ingredients"
         options={{
-          title: 'Search',
+          title: 'Ingredients',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="search-outline" size={size} color={color} />
+            <Ionicons name="restaurant-outline" size={size} color={color} />
           ),
         }}
       />
@@ -57,13 +62,6 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person-outline" size={size} color={color} />
           ),
-        }}
-      />
-      <Tabs.Screen
-        name="receta/[id]"
-        options={{
-          href: null,
-          tabBarStyle: { display: 'none' },
         }}
       />
     </Tabs>

@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useNavigation } from 'expo-router';
-import RecipeDetail from '../../components/RecipeDetail';
+import RecipeDetail from '../components/RecipeDetail';
 import { Text } from 'react-native';
 
 export default function RecipePage() {

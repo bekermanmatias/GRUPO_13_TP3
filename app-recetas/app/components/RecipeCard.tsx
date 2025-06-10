@@ -45,10 +45,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
   };
 
   const handlePress = () => {
-    router.replace({
-      pathname: "/(tabs)/receta/[id]",
-      params: { id: recipe.idMeal }
-    });
+    router.push(`/receta/${recipe.idMeal}`);
   };
 
   return (
