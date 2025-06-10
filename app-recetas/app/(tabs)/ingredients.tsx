@@ -1,344 +1,347 @@
-import React, { useState } from 'react';
+// app/(tabs)/ingredients.js
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
   FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
   Alert,
   ActivityIndicator,
+  Image
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useIngredients } from '../../hooks/useIngredients';
-import { getAllRecipes } from '../../database/database';
-import { findMatchingRecipes } from '../../utils/recipeSearch';
-import { RecipeWithMatch } from '../../types/database';
+import { MaterialIcons } from '@expo/vector-icons';
+import { mealdbService } from '../../services/mealdbService';
 
-export default function IngredientsScreen() {
-  const { ingredients, loading, addIngredient, removeIngredient } = useIngredients();
-  const [recipes, setRecipes] = useState<RecipeWithMatch[]>([]);
-  const [searchLoading, setSearchLoading] = useState(false);
-  
-  // Estados para el formulario
-  const [ingredientName, setIngredientName] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [unit, setUnit] = useState('');
+// Ingredientes comunes predefinidos
+const commonIngredients = [
+  { strIngredient: 'Chicken' },
+  { strIngredient: 'Beef' },
+  { strIngredient: 'Pork' },
+  { strIngredient: 'Fish' },
+  { strIngredient: 'Rice' },
+  { strIngredient: 'Pasta' },
+  { strIngredient: 'Tomato' },
+  { strIngredient: 'Onion' },
+  { strIngredient: 'Garlic' },
+  { strIngredient: 'Potato' },
+  { strIngredient: 'Carrot' },
+  { strIngredient: 'Cheese' },
+  { strIngredient: 'Egg' },
+  { strIngredient: 'Milk' },
+  { strIngredient: 'Flour' },
+  { strIngredient: 'Sugar' },
+  { strIngredient: 'Salt' },
+  { strIngredient: 'Pepper' },
+  { strIngredient: 'Oil' },
+  { strIngredient: 'Butter' }
+];
 
-  const handleAddIngredient = async () => {
-    if (!ingredientName.trim()) {
-      Alert.alert('Error', 'Por favor ingresa el nombre del ingrediente');
-      return;
-    }
+const Ingredients = () => {
+  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+  const [searchText, setSearchText] = useState('');
+  const [availableIngredients, setAvailableIngredients] = useState(commonIngredients);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [loadingRecipes, setLoadingRecipes] = useState(false);
 
+  useEffect(() => {
+    loadAvailableIngredients();
+  }, []);
+
+  const loadAvailableIngredients = async () => {
+    setLoading(true);
     try {
-      await addIngredient(ingredientName, quantity, unit);
-      setIngredientName('');
-      setQuantity('');
-      setUnit('');
-      Alert.alert('Éxito', 'Ingrediente agregado correctamente');
+      const ingredients = await mealdbService.getAllIngredients();
+      setAvailableIngredients(ingredients);
     } catch (error) {
-      Alert.alert('Error', 'No se pudo agregar el ingrediente');
+      console.error('Error loading ingredients:', error);
+      // Si falla la API, usar ingredientes comunes
+      setAvailableIngredients(commonIngredients);
+    }
+    setLoading(false);
+  };
+
+  const addIngredient = (ingredient: { strIngredient: string } | string) => {
+    const ingredientName = typeof ingredient === 'string' ? ingredient : ingredient.strIngredient;
+    if (!selectedIngredients.includes(ingredientName)) {
+      setSelectedIngredients([...selectedIngredients, ingredientName]);
+      setSearchText('');
     }
   };
 
-  const handleRemoveIngredient = (id: number, name: string) => {
-    Alert.alert(
-      'Eliminar ingrediente',
-      `¿Estás seguro de que quieres eliminar ${name}?`,
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        { text: 'Eliminar', style: 'destructive', onPress: () => removeIngredient(id) }
-      ]
-    );
+  const removeIngredient = (ingredient: string) => {
+    setSelectedIngredients(selectedIngredients.filter(item => item !== ingredient));
   };
 
-  const searchRecipes = async () => {
-    if (ingredients.length === 0) {
-      Alert.alert('Sin ingredientes', 'Agrega algunos ingredientes antes de buscar recetas');
+  const searchRecipesByIngredients = async () => {
+    if (selectedIngredients.length === 0) {
+      Alert.alert('Atención', 'Selecciona al menos un ingrediente');
       return;
     }
 
+    setLoadingRecipes(true);
     try {
-      setSearchLoading(true);
-      const allRecipes = await getAllRecipes();
-      const matchingRecipes = findMatchingRecipes(ingredients, allRecipes);
-      setRecipes(matchingRecipes);
+      const recipes = await mealdbService.searchByMultipleIngredients(selectedIngredients);
+      setSearchResults(recipes);
+      
+      if (recipes.length === 0) {
+        Alert.alert('Sin resultados', 'No se encontraron recetas con estos ingredientes');
+      }
     } catch (error) {
       console.error('Error searching recipes:', error);
       Alert.alert('Error', 'No se pudieron buscar las recetas');
-    } finally {
-      setSearchLoading(false);
     }
+    setLoadingRecipes(false);
   };
 
-  const renderIngredient = ({ item }: { item: any }) => (
-    <View style={styles.ingredientItem}>
-      <View style={styles.ingredientInfo}>
-        <Text style={styles.ingredientName}>{item.name}</Text>
-        <Text style={styles.ingredientDetails}>
-          {item.quantity} {item.unit}
-        </Text>
-      </View>
+  const filteredIngredients = availableIngredients.filter((ingredient: { strIngredient: string }) =>
+    ingredient.strIngredient
+      .toLowerCase()
+      .includes(searchText.toLowerCase())
+  );
+
+  const renderIngredientItem = ({ item }: { item: { strIngredient: string } }) => {
+    const ingredientName = typeof item === 'string' ? item : item.strIngredient;
+    const isSelected = selectedIngredients.includes(ingredientName);
+    
+    return (
       <TouchableOpacity
-        onPress={() => handleRemoveIngredient(item.id, item.name)}
-        style={styles.removeButton}
+        style={[styles.ingredientItem, isSelected && styles.selectedIngredient]}
+        onPress={() => addIngredient(item)}
+        disabled={isSelected}
       >
-        <Ionicons name="trash-outline" size={20} color="#FF5252" />
+        <Text style={[styles.ingredientText, isSelected && styles.selectedText]}>
+          {ingredientName}
+        </Text>
+        {isSelected && (
+          <MaterialIcons name="check" size={20} color="#fff" />
+        )}
+      </TouchableOpacity>
+    );
+  };
+
+  const renderSelectedIngredient = ({ item }: { item: string }) => (
+    <View style={styles.selectedChip}>
+      <Text style={styles.chipText}>{item}</Text>
+      <TouchableOpacity onPress={() => removeIngredient(item)}>
+        <MaterialIcons name="close" size={18} color="#666" />
       </TouchableOpacity>
     </View>
   );
 
-  const renderRecipe = ({ item }: { item: RecipeWithMatch }) => {
-    const recipeIngredients = JSON.parse(item.ingredients) as string[];
-    
-    return (
-      <View style={styles.recipeCard}>
-        <Text style={styles.recipeName}>{item.name}</Text>
-        <Text style={styles.matchInfo}>
-          {item.matchCount} de {recipeIngredients.length} ingredientes ({Math.round(item.matchPercentage)}%)
-        </Text>
-        <Text style={styles.matchingIngredients}>
-          Tienes: {item.matchingIngredients.join(', ')}
-        </Text>
-        <Text style={styles.allIngredients}>
-          Necesitas: {recipeIngredients.join(', ')}
-        </Text>
-      </View>
-    );
-  };
-
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#4CAF50" />
-        <Text>Cargando ingredientes...</Text>
-      </View>
-    );
-  }
-
-  return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Mis Ingredientes</Text>
-      
-      {/* Formulario para agregar ingredientes */}
-      <View style={styles.formContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Nombre del ingrediente"
-          value={ingredientName}
-          onChangeText={setIngredientName}
-        />
-        <View style={styles.row}>
-          <TextInput
-            style={[styles.input, styles.smallInput]}
-            placeholder="Cantidad"
-            value={quantity}
-            onChangeText={setQuantity}
-          />
-          <TextInput
-            style={[styles.input, styles.smallInput]}
-            placeholder="Unidad (ej: kg, gr, tazas)"
-            value={unit}
-            onChangeText={setUnit}
-          />
-        </View>
-        <TouchableOpacity style={styles.addButton} onPress={handleAddIngredient}>
-          <Text style={styles.addButtonText}>Agregar Ingrediente</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Lista de ingredientes */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>
-          Ingredientes agregados ({ingredients.length})
-        </Text>
-        {ingredients.length === 0 ? (
-          <Text style={styles.emptyText}>No tienes ingredientes agregados</Text>
-        ) : (
-          <FlatList
-            data={ingredients}
-            renderItem={renderIngredient}
-            keyExtractor={(item) => item.id.toString()}
-            scrollEnabled={false}
-          />
+  const renderRecipeItem = ({ item }: { item: any }) => (
+    <TouchableOpacity style={styles.recipeItem}>
+      <Image source={{ uri: item.strMealThumb }} style={styles.recipeImage} />
+      <View style={styles.recipeInfo}>
+        <Text style={styles.recipeTitle}>{item.strMeal}</Text>
+        <Text style={styles.recipeCategory}>{item.strCategory}</Text>
+        {item.matchingIngredients && (
+          <Text style={styles.matchingIngredients}>
+            {item.matchingIngredients} ingrediente(s) coincidente(s)
+          </Text>
         )}
       </View>
+    </TouchableOpacity>
+  );
 
-      {/* Botón de búsqueda */}
-      {ingredients.length > 0 && (
-        <TouchableOpacity 
-          style={styles.searchButton} 
-          onPress={searchRecipes}
-          disabled={searchLoading}
-        >
-          {searchLoading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.searchButtonText}>
-              Buscar Recetas Compatibles
-            </Text>
-          )}
-        </TouchableOpacity>
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Buscar por Ingredientes</Text>
+      
+      {/* Ingredientes seleccionados */}
+      {selectedIngredients.length > 0 && (
+        <View style={styles.selectedSection}>
+          <Text style={styles.sectionTitle}>Ingredientes Seleccionados:</Text>
+          <FlatList
+            horizontal
+            data={selectedIngredients}
+            renderItem={renderSelectedIngredient}
+            keyExtractor={(item) => item}
+            style={styles.selectedList}
+            showsHorizontalScrollIndicator={false}
+          />
+          <TouchableOpacity
+            style={styles.searchButton}
+            onPress={searchRecipesByIngredients}
+            disabled={loadingRecipes}
+          >
+            {loadingRecipes ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.searchButtonText}>Buscar Recetas</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Buscador de ingredientes */}
+      <View style={styles.searchSection}>
+        <Text style={styles.sectionTitle}>Agregar Ingredientes:</Text>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Buscar ingrediente..."
+          value={searchText}
+          onChangeText={setSearchText}
+        />
+      </View>
+
+      {/* Lista de ingredientes disponibles */}
+      {loading ? (
+        <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />
+      ) : (
+        <FlatList
+          data={searchText ? filteredIngredients : commonIngredients}
+          renderItem={renderIngredientItem}
+          keyExtractor={(item, index) => `${item.strIngredient || item}-${index}`}
+          style={styles.ingredientsList}
+          numColumns={2}
+        />
       )}
 
       {/* Resultados de recetas */}
-      {recipes.length > 0 && (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>
-            Recetas encontradas ({recipes.length})
-          </Text>
+      {searchResults.length > 0 && (
+        <View style={styles.resultsSection}>
+          <Text style={styles.sectionTitle}>Recetas Encontradas:</Text>
           <FlatList
-            data={recipes}
-            renderItem={renderRecipe}
-            keyExtractor={(item) => item.id.toString()}
-            scrollEnabled={false}
+            data={searchResults}
+            renderItem={renderRecipeItem}
+            keyExtractor={(item) => item.idMeal}
+            style={styles.recipesList}
           />
         </View>
       )}
-    </ScrollView>
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
     padding: 16,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333',
-    marginTop: 40,
+    textAlign: 'center',
   },
-  formContainer: {
-    backgroundColor: '#fff',
-    padding: 16,
-    borderRadius: 12,
+  selectedSection: {
     marginBottom: 20,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
-    fontSize: 16,
-  },
-  row: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  smallInput: {
-    flex: 1,
-  },
-  addButton: {
-    backgroundColor: '#4CAF50',
-    padding: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  addButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  section: {
+    padding: 15,
     backgroundColor: '#fff',
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 20,
+    borderRadius: 10,
     elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 12,
-    color: '#333',
+    marginBottom: 10,
   },
-  emptyText: {
-    textAlign: 'center',
-    color: '#666',
-    fontStyle: 'italic',
-    padding: 20,
+  selectedList: {
+    marginBottom: 15,
   },
-  ingredientItem: {
+  selectedChip: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    backgroundColor: '#e0e0e0',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    marginRight: 8,
   },
-  ingredientInfo: {
-    flex: 1,
-  },
-  ingredientName: {
-    fontSize: 16,
-    fontWeight: '500',
-    textTransform: 'capitalize',
-  },
-  ingredientDetails: {
+  chipText: {
+    marginRight: 8,
     fontSize: 14,
-    color: '#666',
-    marginTop: 2,
-  },
-  removeButton: {
-    padding: 8,
   },
   searchButton: {
-    backgroundColor: '#2196F3',
-    padding: 16,
-    borderRadius: 12,
+    backgroundColor: '#007AFF',
+    padding: 12,
+    borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 20,
   },
   searchButtonText: {
     color: '#fff',
-    fontWeight: 'bold',
     fontSize: 16,
-  },
-  recipeCard: {
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  recipeName: {
-    fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 8,
   },
-  matchInfo: {
-    fontSize: 14,
-    color: '#4CAF50',
-    fontWeight: '500',
-    marginBottom: 8,
+  searchSection: {
+    marginBottom: 20,
   },
-  matchingIngredients: {
+  searchInput: {
+    backgroundColor: '#fff',
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  ingredientsList: {
+    flex: 1,
+    marginBottom: 20,
+  },
+  ingredientItem: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 12,
+    margin: 4,
+    borderRadius: 8,
+    elevation: 1,
+  },
+  selectedIngredient: {
+    backgroundColor: '#007AFF',
+  },
+  ingredientText: {
     fontSize: 14,
+  },
+  selectedText: {
+    color: '#fff',
+  },
+  loader: {
+    marginTop: 50,
+  },
+  resultsSection: {
+    marginTop: 20,
+  },
+  recipesList: {
+    maxHeight: 300,
+  },
+  recipeItem: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    padding: 12,
+    marginBottom: 8,
+    borderRadius: 8,
+    elevation: 1,
+  },
+  recipeImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  recipeInfo: {
+    flex: 1,
+  },
+  recipeTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  recipeCategory: {
+    fontSize: 12,
     color: '#666',
     marginBottom: 4,
   },
-  allIngredients: {
-    fontSize: 14,
-    color: '#888',
+  matchingIngredients: {
+    fontSize: 12,
+    color: '#007AFF',
+    fontStyle: 'italic',
   },
 });
+
+export default Ingredients;
