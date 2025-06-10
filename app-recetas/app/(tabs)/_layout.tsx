@@ -18,6 +18,10 @@ export default function TabsLayout() {
           backgroundColor: '#fff',
           borderTopWidth: 0.5,
           height: 60,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
         },
         tabBarLabelStyle: {
           fontSize: 12,
@@ -34,11 +38,11 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="search"
+        name="ingredients"
         options={{
-          title: 'Search',
+          title: 'Ingredients',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="search-outline" size={size} color={color} />
+            <Ionicons name="restaurant-outline" size={size} color={color} />
           ),
         }}
       />
@@ -57,16 +61,6 @@ export default function TabsLayout() {
           title: 'Profile',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      {/* Agregamos nueva tab para ingredientes */}
-      <Tabs.Screen
-        name="ingredients"
-        options={{
-          title: 'Ingredientes',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="restaurant-outline" size={size} color={color} />
           ),
         }}
       />
