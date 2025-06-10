@@ -1,34 +1,50 @@
 import * as SQLite from 'expo-sqlite';
 import { UserIngredient, Recipe } from '../types/database';
 
-const db = SQLite.openDatabaseAsync('recipes.db');
+const db = SQLite.openDatabase('recipes.db');
 
 export const initDatabase = async (): Promise<void> => {
-  const database = await db;
-  
   try {
-    await database.execAsync(`
-      CREATE TABLE IF NOT EXISTS user_ingredients (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT UNIQUE NOT NULL,
-        quantity TEXT,
-        unit TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
-    
-    await database.execAsync(`
-      CREATE TABLE IF NOT EXISTS recipes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        ingredients TEXT NOT NULL,
-        instructions TEXT,
-        image_url TEXT,
-        prep_time INTEGER,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
-    
+    await new Promise<void>((resolve, reject) => {
+      db.transaction(tx => {
+        tx.executeSql(
+          `CREATE TABLE IF NOT EXISTS user_ingredients (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT UNIQUE NOT NULL,
+            quantity TEXT,
+            unit TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+          );`,
+          [],
+          () => {
+            tx.executeSql(
+              `CREATE TABLE IF NOT EXISTS recipes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                ingredients TEXT NOT NULL,
+                instructions TEXT,
+                image_url TEXT,
+                prep_time INTEGER,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+              );`,
+              [],
+              () => {
+                resolve();
+              },
+              (_, error) => {
+                reject(error);
+                return false;
+              }
+            );
+          },
+          (_, error) => {
+            reject(error);
+            return false;
+          }
+        );
+      });
+    });
+
     // Insertar algunas recetas de ejemplo
     await insertSampleRecipes();
     
@@ -39,7 +55,6 @@ export const initDatabase = async (): Promise<void> => {
 };
 
 const insertSampleRecipes = async () => {
-  const database = await db;
   try {
     const sampleRecipes = [
       {
@@ -54,12 +69,22 @@ const insertSampleRecipes = async () => {
       }
     ];
 
-    for (const recipe of sampleRecipes) {
-      await database.runAsync(
-        'INSERT OR IGNORE INTO recipes (name, ingredients, instructions) VALUES (?, ?, ?)',
-        [recipe.name, JSON.stringify(recipe.ingredients), recipe.instructions]
-      );
-    }
+    await new Promise<void>((resolve, reject) => {
+      db.transaction(tx => {
+        sampleRecipes.forEach(recipe => {
+          tx.executeSql(
+            'INSERT OR IGNORE INTO recipes (name, ingredients, instructions) VALUES (?, ?, ?)',
+            [recipe.name, JSON.stringify(recipe.ingredients), recipe.instructions],
+            undefined,
+            (_, error) => {
+              reject(error);
+              return false;
+            }
+          );
+        });
+        resolve();
+      });
+    });
   } catch (error) {
     console.error('Error inserting sample recipes:', error);
   }
@@ -67,46 +92,65 @@ const insertSampleRecipes = async () => {
 
 // Funciones para ingredientes
 export const addUserIngredient = async (name: string, quantity: string, unit: string): Promise<void> => {
-  const database = await db;
-  try {
-    await database.runAsync(
-      'INSERT OR REPLACE INTO user_ingredients (name, quantity, unit) VALUES (?, ?, ?)',
-      [name.toLowerCase().trim(), quantity, unit]
-    );
-  } catch (error) {
-    console.error('Error adding ingredient:', error);
-    throw error;
-  }
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'INSERT OR REPLACE INTO user_ingredients (name, quantity, unit) VALUES (?, ?, ?)',
+        [name.toLowerCase().trim(), quantity, unit],
+        () => resolve(),
+        (_, error) => {
+          reject(error);
+          return false;
+        }
+      );
+    });
+  });
 };
 
 export const getUserIngredients = async (): Promise<UserIngredient[]> => {
-  const database = await db;
-  try {
-    const result = await database.getAllAsync('SELECT * FROM user_ingredients ORDER BY name');
-    return result as UserIngredient[];
-  } catch (error) {
-    console.error('Error getting ingredients:', error);
-    return [];
-  }
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM user_ingredients ORDER BY name',
+        [],
+        (_, { rows: { _array } }) => resolve(_array as UserIngredient[]),
+        (_, error) => {
+          reject(error);
+          return false;
+        }
+      );
+    });
+  });
 };
 
 export const removeUserIngredient = async (id: number): Promise<void> => {
-  const database = await db;
-  try {
-    await database.runAsync('DELETE FROM user_ingredients WHERE id = ?', [id]);
-  } catch (error) {
-    console.error('Error removing ingredient:', error);
-    throw error;
-  }
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'DELETE FROM user_ingredients WHERE id = ?',
+        [id],
+        () => resolve(),
+        (_, error) => {
+          reject(error);
+          return false;
+        }
+      );
+    });
+  });
 };
 
 export const getAllRecipes = async (): Promise<Recipe[]> => {
-  const database = await db;
-  try {
-    const result = await database.getAllAsync('SELECT * FROM recipes ORDER BY name');
-    return result as Recipe[];
-  } catch (error) {
-    console.error('Error getting recipes:', error);
-    return [];
-  }
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM recipes ORDER BY name',
+        [],
+        (_, { rows: { _array } }) => resolve(_array as Recipe[]),
+        (_, error) => {
+          reject(error);
+          return false;
+        }
+      );
+    });
+  });
 };
