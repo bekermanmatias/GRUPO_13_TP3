@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { mealdbService } from '../../services/mealdbService';
+import { useRouter } from 'expo-router';
 
 // Ingredientes comunes predefinidos
 const commonIngredients = [
@@ -39,6 +40,7 @@ const commonIngredients = [
 ];
 
 const Ingredients = () => {
+  const router = useRouter();
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [searchText, setSearchText] = useState('');
   const [availableIngredients, setAvailableIngredients] = useState(commonIngredients);
@@ -132,7 +134,10 @@ const Ingredients = () => {
   );
 
   const renderRecipeItem = ({ item }: { item: any }) => (
-    <TouchableOpacity style={styles.recipeItem}>
+    <TouchableOpacity 
+      style={styles.recipeItem}
+      onPress={() => router.push(`/receta/${item.idMeal}`)}
+    >
       <Image source={{ uri: item.strMealThumb }} style={styles.recipeImage} />
       <View style={styles.recipeInfo}>
         <Text style={styles.recipeTitle}>{item.strMeal}</Text>
