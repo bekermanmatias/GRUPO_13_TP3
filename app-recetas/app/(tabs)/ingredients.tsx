@@ -153,8 +153,6 @@ const Ingredients = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Ingredients</Text>
-      
       {/* Selected ingredients */}
       {selectedIngredients.length > 0 && (
         <View style={styles.selectedSection}>
@@ -226,6 +224,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#f5f5f5',
+    paddingTop: 20,
   },
   title: {
     fontSize: 22,
