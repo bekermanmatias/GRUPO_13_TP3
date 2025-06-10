@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, Button } from 'react-native';
-import { signOut } from 'firebase/auth';
+import { signOut, User } from 'firebase/auth'; // Importar User
 import { auth } from '../../firebaseConfig';
 import { useRouter } from 'expo-router';
 
 export default function Profile() {
   const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);  // <User | null>
+
+  useEffect(() => {
+    const currentUser = auth.currentUser;
+    setUser(currentUser);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -16,14 +22,24 @@ export default function Profile() {
     }
   };
 
+  if (!user) {
+    return (
+      <View style={styles.container}>
+        <Text>Cargando usuario...</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: 'https://i.pravatar.cc/999' }} // cambiar imagen por la del usuario
+        source={{
+          uri: user.photoURL || 'https://i.pravatar.cc/120?u=' + user.email,
+        }}
         style={styles.avatar}
       />
-      <Text style={styles.name}>Juan Pérez</Text>
-      <Text style={styles.email}>juan.perez@example.com</Text>
+      <Text style={styles.name}>{user.displayName || user.email?.split('@')[0]}</Text>
+      <Text style={styles.email}>{user.email}</Text>
       
       <Button title="Cerrar sesión" onPress={handleLogout} />
     </View>
@@ -34,6 +50,8 @@ const styles = StyleSheet.create({
   container: {
     padding: 32,
     alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
   },
   avatar: {
     width: 120,
@@ -49,5 +67,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'gray',
     marginTop: 4,
+    marginBottom: 16,
   },
 });
