@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, Button } from 'react-native';
-import { signOut, User } from 'firebase/auth'; // Importar User
+import { View, Text, StyleSheet, Image, Button, TouchableOpacity } from 'react-native';
+import { signOut, User } from 'firebase/auth';
 import { auth } from '../../firebaseConfig';
 import { useRouter } from 'expo-router';
+import { useTheme } from '../../src/context/ThemeContext';
+import { Ionicons } from '@expo/vector-icons'; // Importá íconos
 
 export default function Profile() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);  // <User | null>
-
+  const { theme, mode, toggleTheme } = useTheme();
+  const [user, setUser] = useState<User | null>(null);
+  
   useEffect(() => {
     const currentUser = auth.currentUser;
     setUser(currentUser);
@@ -24,24 +27,34 @@ export default function Profile() {
 
   if (!user) {
     return (
-      <View style={styles.container}>
-        <Text>Cargando usuario...</Text>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <Text style={{ color: theme.text }}>Cargando usuario...</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      {/* Botón de cambio de tema */}
+      <TouchableOpacity style={styles.themeToggle} onPress={toggleTheme}>
+      <Ionicons name={mode === 'light' ? 'moon' : 'sunny'} size={28} color={theme.text} />
+
+      </TouchableOpacity>
+
       <Image
         source={{
           uri: user.photoURL || 'https://i.pravatar.cc/120?u=' + user.email,
         }}
         style={styles.avatar}
       />
-      <Text style={styles.name}>{user.displayName || user.email?.split('@')[0]}</Text>
-      <Text style={styles.email}>{user.email}</Text>
-      
-      <Button title="Cerrar sesión" onPress={handleLogout} />
+      <Text style={[styles.name, { color: theme.text }]}>
+        {user.displayName || user.email?.split('@')[0]}
+      </Text>
+      <Text style={[styles.email, { color: theme.text }]}>{user.email}</Text>
+
+      <View style={{ marginTop: 20, width: '100%' }}>
+        <Button title="Cerrar sesión" color={theme.primary} onPress={handleLogout} />
+      </View>
     </View>
   );
 }
@@ -52,6 +65,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
+  },
+  themeToggle: {
+    position: 'absolute',
+    top: 50,
+    right: 30,
   },
   avatar: {
     width: 120,
@@ -65,7 +83,6 @@ const styles = StyleSheet.create({
   },
   email: {
     fontSize: 16,
-    color: 'gray',
     marginTop: 4,
     marginBottom: 16,
   },

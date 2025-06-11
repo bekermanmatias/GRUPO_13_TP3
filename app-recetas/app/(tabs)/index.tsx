@@ -1,15 +1,22 @@
 import { useState, useEffect } from 'react';
-import { View, Text, TextInput, ScrollView, StyleSheet, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { Link } from 'expo-router';
+import {
+  View,
+  Text,
+  TextInput,
+  ScrollView,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../../src/context/ThemeContext'; // asegurate de importar correctamente
 import CategoryChips from '../components/CategoryChips';
 import RecipeCard from '../components/RecipeCard';
-
 
 const categories = ['All', 'Beef', 'Chicken', 'Dessert', 'Lamb', 'Pasta', 'Seafood', 'Vegan', 'Vegetarian'];
 
 export default function SearchScreen() {
-  const sampleRecipe = { idMeal: '12345', strMeal: 'Pizza Margarita' };
+  const { theme } = useTheme();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [recipes, setRecipes] = useState([]);
@@ -53,23 +60,23 @@ export default function SearchScreen() {
   }, []);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 20 }}>
-      <Text style={styles.title}>Search</Text>
+    <ScrollView style={[styles.container, { backgroundColor: theme.background }]} contentContainerStyle={{ paddingBottom: 20 }}>
+      <Text style={[styles.title, { color: theme.text }]}>Search</Text>
 
       {/* Search Bar */}
-      <View style={styles.searchBar}>
-        <Ionicons name="search-outline" size={20} color="#888" style={{ marginRight: 8 }} />
+      <View style={[styles.searchBar, { backgroundColor: theme.inputBackground }]}>
+        <Ionicons name="search-outline" size={20} color={theme.placeholderText} style={{ marginRight: 8 }} />
         <TextInput
-          style={styles.input}
+          style={[styles.input, { color: theme.text }]}
           placeholder="Search recipes"
-          placeholderTextColor="#aaa"
+          placeholderTextColor={theme.placeholderText}
           value={searchQuery}
           onChangeText={handleSearch}
         />
       </View>
 
       {/* Categories */}
-      <Text style={styles.sectionTitle}>Browse by category</Text>
+      <Text style={[styles.sectionTitle, { color: theme.text }]}>Browse by category</Text>
       <CategoryChips
         categories={categories}
         selectedCategory={selectedCategory}
@@ -77,11 +84,11 @@ export default function SearchScreen() {
       />
 
       {/* Results */}
-      <Text style={styles.sectionTitle}>Results</Text>
+      <Text style={[styles.sectionTitle, { color: theme.text }]}>Results</Text>
       {loading ? (
-        <ActivityIndicator size="large" color="#1B4332" style={{ marginTop: 20 }} />
+        <ActivityIndicator size="large" color={theme.primary} style={{ marginTop: 20 }} />
       ) : recipes.length === 0 ? (
-        <Text style={styles.noResults}>No se encontraron recetas.</Text>
+        <Text style={[styles.noResults, { color: theme.placeholderText }]}>No se encontraron recetas.</Text>
       ) : (
         <View style={styles.grid}>
           {recipes.map((recipe) => (
@@ -89,14 +96,12 @@ export default function SearchScreen() {
           ))}
         </View>
       )}
-
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F8FFFA',
     paddingHorizontal: 20,
     flex: 1,
   },
@@ -108,7 +113,6 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     flexDirection: 'row',
-    backgroundColor: '#eef5ef',
     alignItems: 'center',
     paddingHorizontal: 10,
     borderRadius: 10,
@@ -118,9 +122,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#333',
-    borderWidth: 0, 
-    outlineColor: '#eef5ef',
+    borderWidth: 0,
   },
   sectionTitle: {
     fontSize: 16,
@@ -130,15 +132,13 @@ const styles = StyleSheet.create({
   },
   noResults: {
     fontSize: 16,
-    color: '#888',
     fontStyle: 'italic',
     marginVertical: 10,
   },
   grid: {
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  justifyContent: 'space-between',
-  gap: 12, // si tu versión de React Native lo soporta
-},
-
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
 });

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RecipeCard from '../components/RecipeCard';
+import { useTheme } from '../../src/context/ThemeContext'; // Asegurate del path correcto
 
 interface Recipe {
   idMeal: string;
@@ -11,6 +12,7 @@ interface Recipe {
 
 export default function Favorites() {
   const [favorites, setFavorites] = useState<Recipe[]>([]);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const loadFavorites = async () => {
@@ -22,8 +24,12 @@ export default function Favorites() {
   }, []);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 20 }}>
-      <Text style={styles.title}>Favorites</Text>
+    <ScrollView
+      style={[styles.container, { backgroundColor: theme.background }]}
+      contentContainerStyle={{ paddingBottom: 20 }}
+    >
+      <Text style={[styles.title, { color: theme.text }]}>Favoritos</Text>
+
       {favorites.length > 0 ? (
         <View style={styles.grid}>
           {favorites.map((recipe) => (
@@ -31,7 +37,9 @@ export default function Favorites() {
           ))}
         </View>
       ) : (
-        <Text style={styles.noResults}> Favorites   </Text>
+        <Text style={[styles.noResults, { color: theme.placeholderText }]}>
+          No hay recetas favoritas.
+        </Text>
       )}
     </ScrollView>
   );
@@ -39,7 +47,6 @@ export default function Favorites() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F8FFFA',
     paddingHorizontal: 20,
     flex: 1,
   },
@@ -51,7 +58,6 @@ const styles = StyleSheet.create({
   },
   noResults: {
     fontSize: 16,
-    color: '#888',
     fontStyle: 'italic',
     marginVertical: 10,
   },
@@ -59,6 +65,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: 12, 
+    gap: 12,
   },
 });

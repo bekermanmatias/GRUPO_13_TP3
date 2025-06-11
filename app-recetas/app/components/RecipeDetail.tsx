@@ -12,6 +12,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons'; 
+import { useColorScheme } from 'react-native';
 
 
 interface RecipeDetailProps {
@@ -45,6 +46,9 @@ export default function RecipeDetail({ id, navigation }: RecipeDetailProps) {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [checkedIngredients, setCheckedIngredients] = useState<CheckedIngredients>({});
+  const colorScheme = useColorScheme(); // 🌗 detecta modo claro/oscuro
+  const isDarkMode = colorScheme === 'dark';
+  const styles = getStyles(isDarkMode); // 🎨 usa estilos según tema
 
   useEffect(() => {
     // Limpiar el estado anterior
@@ -263,181 +267,147 @@ export default function RecipeDetail({ id, navigation }: RecipeDetailProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-  },
-  imageContainer: {
-    position: 'relative',
-    width: '100%',
-    height: 300,
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-  },
-  headerButtons: {
-    position: 'absolute',
-    top: 16,
-    left: 16,
-    right: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  headerButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderRadius: 20,
-    padding: 8,
-    elevation: 2,
-  },
-  content: {
-    padding: 16,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  description: {
-    fontSize: 16,
-    color: '#555',
-    marginBottom: 16,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 16,
-    marginBottom: 8,
-  },
-  ingredientItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 6,
-  },
-  checkbox: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: '#4CAF50',
-    marginRight: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkboxChecked: {
-    backgroundColor: '#4CAF50',
-  },
-  ingredientText: {
-    fontSize: 16,
-    color: '#333',
-    flex: 1,
-  },
-  ingredientTextChecked: {
-    textDecorationLine: 'line-through',
-    color: '#888',
-  },
-  step: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  stepTextContainer: {
-    marginLeft: 12,
-  },
-  stepText: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  stepTime: {
-    fontSize: 14,
-    color: '#666',
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 16,
-    marginBottom: 8,
-  },
-  clearButton: {
-    backgroundColor: '#f0f0f0',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  clearButtonText: {
-    fontSize: 12,
-    color: '#666',
-  },
-  categoryContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  categoryText: {
-    fontSize: 16,
-    color: '#666',
-    marginLeft: 8,
-  },
-  categoryDot: {
-    color: '#666',
-    marginHorizontal: 8,
-  },
-  tagsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 16,
-  },
-  tagChip: {
-    backgroundColor: '#E8F5E9',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    marginRight: 8,
-    marginBottom: 8,
-  },
-  tagText: {
-    color: '#4CAF50',
-    fontSize: 14,
-  },
-  instructionStep: {
-    flexDirection: 'row',
-    marginBottom: 16,
-    paddingRight: 16,
-  },
-  stepNumber: {
-    backgroundColor: '#4CAF50',
-    color: '#fff',
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    textAlign: 'center',
-    lineHeight: 24,
-    marginRight: 12,
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  instructionText: {
-    flex: 1,
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#333',
-  },
-  youtubeSection: {
-    marginTop: 24,
-  },
-  youtubeButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFF',
-    padding: 12,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  youtubeButtonText: {
-    marginLeft: 8,
-    fontSize: 16,
-    color: '#333',
-  },
-});
+const getStyles = (isDarkMode: boolean) =>
+  StyleSheet.create({
+    container: {
+      backgroundColor: isDarkMode ? '#121212' : '#fff',
+      flex: 1,
+    },
+    imageContainer: {
+      position: 'relative',
+      width: '100%',
+      height: 300,
+    },
+    image: {
+      width: '100%',
+      height: '100%',
+    },
+    headerButtons: {
+      position: 'absolute',
+      top: 16,
+      left: 16,
+      right: 16,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    headerButton: {
+      backgroundColor: isDarkMode ? 'rgba(50,50,50,0.8)' : 'rgba(255,255,255,0.8)',
+      borderRadius: 20,
+      padding: 8,
+      elevation: 2,
+    },
+    content: {
+      padding: 16,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 8,
+      color: isDarkMode ? '#fff' : '#000',
+    },
+    categoryContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 8,
+    },
+    categoryText: {
+      fontSize: 14,
+      color: '#4CAF50',
+      marginLeft: 4,
+    },
+    categoryDot: {
+      marginHorizontal: 4,
+      color: '#4CAF50',
+    },
+    tagsContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      marginVertical: 8,
+    },
+    tagChip: {
+      backgroundColor: isDarkMode ? '#1E3D3A' : '#e0f2f1',
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      borderRadius: 20,
+      marginRight: 6,
+      marginBottom: 6,
+    },
+    tagText: {
+      fontSize: 12,
+      color: isDarkMode ? '#B2DFDB' : '#00796B',
+    },
+    sectionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginTop: 16,
+      marginBottom: 8,
+    },
+    sectionTitle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: isDarkMode ? '#fff' : '#000',
+    },
+    clearButton: {
+      backgroundColor: '#f44336',
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      borderRadius: 10,
+    },
+    clearButtonText: {
+      color: '#fff',
+      fontSize: 12,
+    },
+    ingredientItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 6,
+    },
+    checkbox: {
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      borderWidth: 2,
+      borderColor: '#4CAF50',
+      marginRight: 12,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    checkboxChecked: {
+      backgroundColor: '#4CAF50',
+    },
+    ingredientText: {
+      fontSize: 16,
+      color: isDarkMode ? '#ddd' : '#333',
+      flex: 1,
+    },
+    ingredientTextChecked: {
+      textDecorationLine: 'line-through',
+      color: isDarkMode ? '#666' : '#888',
+    },
+    instructionStep: {
+      flexDirection: 'row',
+      marginBottom: 10,
+    },
+    stepNumber: {
+      marginRight: 8,
+      fontWeight: 'bold',
+      color: isDarkMode ? '#ccc' : '#000',
+    },
+    instructionText: {
+      color: isDarkMode ? '#eee' : '#333',
+      flex: 1,
+    },
+    youtubeSection: {
+      marginTop: 20,
+    },
+    youtubeButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: 10,
+    },
+    youtubeButtonText: {
+      color: '#FF0000',
+      marginLeft: 8,
+    },
+  });
