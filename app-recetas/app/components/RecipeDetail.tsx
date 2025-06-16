@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 import { addFavorite, removeFavorite, subscribeFavorites } from '../../database/favorites';
+import { updateCheckedIngredients, subscribeToCheckedIngredients, clearCheckedIngredients } from '../../database/ingredients';
 import { auth } from '../../firebaseConfig';
 import { useRouter } from 'expo-router';
 
@@ -80,38 +81,44 @@ export default function RecipeDetail({ id }: RecipeDetailProps) {
   }, [id]);
 
   useEffect(() => {
-    // Limpiar el estado anterior
-    setCheckedIngredients({});
-    // Cargar los nuevos datos
-    loadCheckedIngredients();
+    let unsubscribe: () => void;
+
+    if (auth.currentUser) {
+      unsubscribe = subscribeToCheckedIngredients(id, (ingredients) => {
+        setCheckedIngredients(ingredients);
+      });
+    }
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, [id]);
 
-  const loadCheckedIngredients = async () => {
-    try {
-      const stored = await AsyncStorage.getItem(`checkedIngredients_${id}`);
-      if (stored) {
-        setCheckedIngredients(JSON.parse(stored));
-      }
-    } catch (error) {
-      console.error('Error loading checked ingredients:', error);
-    }
-  };
-
   const toggleIngredient = async (ingredient: string) => {
+    if (!auth.currentUser) {
+      router.push('/profile');
+      return;
+    }
+
     const newCheckedIngredients = {
       ...checkedIngredients,
       [ingredient]: !checkedIngredients[ingredient]
     };
     
-    setCheckedIngredients(newCheckedIngredients);
-    
     try {
-      await AsyncStorage.setItem(
-        `checkedIngredients_${id}`,
-        JSON.stringify(newCheckedIngredients)
-      );
+      await updateCheckedIngredients(id, newCheckedIngredients);
     } catch (error) {
-      console.error('Error saving checked ingredients:', error);
+      console.error('Error updating checked ingredients:', error);
+    }
+  };
+
+  const handleClearIngredients = async () => {
+    try {
+      await clearCheckedIngredients(id);
+    } catch (error) {
+      console.error('Error clearing ingredients:', error);
     }
   };
 
@@ -140,6 +147,16 @@ export default function RecipeDetail({ id }: RecipeDetailProps) {
         <Text style={styles.title}>Cargando...</Text>
       </View>
     );
+  }
+
+  // Extraer ingredientes y medidas
+  const ingredients = [];
+  for (let i = 1; i <= 20; i++) {
+    const ingredient = recipe[`strIngredient${i}`];
+    const measure = recipe[`strMeasure${i}`];
+    if (ingredient && ingredient.trim()) {
+      ingredients.push({ ingredient, measure });
+    }
   }
 
   return (
@@ -198,46 +215,35 @@ export default function RecipeDetail({ id }: RecipeDetailProps) {
           {Object.keys(checkedIngredients).length > 0 && (
             <TouchableOpacity
               style={styles.clearButton}
-              onPress={async () => {
-                setCheckedIngredients({});
-                await AsyncStorage.removeItem(`checkedIngredients_${id}`);
-              }}
+              onPress={handleClearIngredients}
             >
               <Text style={styles.clearButtonText}>Clear all</Text>
             </TouchableOpacity>
           )}
         </View>
 
-        {Array.from({ length: 20 }, (_, i) => {
-          const ing = recipe[`strIngredient${i + 1}`];
-          const measure = recipe[`strMeasure${i + 1}`];
-          if (ing && ing.trim() !== '') {
-            const ingredientKey = `${measure} ${ing}`;
-            return (
-              <TouchableOpacity
-                key={i}
-                style={styles.ingredientItem}
-                onPress={() => toggleIngredient(ingredientKey)}
-              >
-                <View style={[
-                  styles.checkbox,
-                  checkedIngredients[ingredientKey] && styles.checkboxChecked
-                ]}>
-                  {checkedIngredients[ingredientKey] && (
-                    <Ionicons name="checkmark" size={16} color="#fff" />
-                  )}
-                </View>
-                <Text style={[
-                  styles.ingredientText,
-                  checkedIngredients[ingredientKey] && styles.ingredientTextChecked
-                ]}>
-                  {ingredientKey}
-                </Text>
-              </TouchableOpacity>
-            );
-          }
-          return null;
-        })}
+        {ingredients.map(({ ingredient, measure }, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.ingredientItem}
+            onPress={() => toggleIngredient(ingredient)}
+          >
+            <View style={[
+              styles.checkbox,
+              checkedIngredients[ingredient] && styles.checkboxChecked
+            ]}>
+              {checkedIngredients[ingredient] && (
+                <Ionicons name="checkmark" size={16} color="#fff" />
+              )}
+            </View>
+            <Text style={[
+              styles.ingredientText,
+              checkedIngredients[ingredient] && styles.ingredientTextChecked
+            ]}>
+              {measure} {ingredient}
+            </Text>
+          </TouchableOpacity>
+        ))}
 
         <Text style={styles.sectionTitle}>Instructions</Text>
         {recipe.strInstructions
