@@ -20,8 +20,5 @@ module.exports = async function (env, argv) {
     '.js',
   ];
 
-  // Excluir SQLite en web
-  config.resolve.alias['expo-sqlite'] = 'expo-sqlite/build/SQLite.web.js';
-
   return config;
 }; 

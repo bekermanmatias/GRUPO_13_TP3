@@ -1,14 +1,9 @@
-import { Platform } from 'react-native';
-import * as NativeDB from './database';
-import * as WebDB from './database.web';
-
-export const {
+export {
   initDatabase,
   addUserIngredient,
   getUserIngredients,
   removeUserIngredient,
   getAllRecipes,
-} = Platform.select({
-  web: WebDB,
-  default: NativeDB,
-}); 
+  type UserIngredient,
+  type Recipe,
+} from './database'; 

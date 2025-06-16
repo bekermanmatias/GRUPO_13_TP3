@@ -1,156 +1,101 @@
-import * as SQLite from 'expo-sqlite';
-import { UserIngredient, Recipe } from '../types/database';
+export interface UserIngredient {
+  id: number;
+  name: string;
+  quantity: string;
+  unit: string;
+  created_at: string;
+}
 
-const db = SQLite.openDatabase('recipes.db');
+export interface Recipe {
+  id: number;
+  name: string;
+  ingredients: string[];
+  instructions: string;
+  image_url?: string;
+  prep_time?: number;
+  created_at: string;
+}
+
+// Implementación usando localStorage
+const WEB_STORAGE_KEY = {
+  USER_INGREDIENTS: 'user_ingredients',
+  RECIPES: 'recipes',
+};
 
 export const initDatabase = async (): Promise<void> => {
   try {
-    await new Promise<void>((resolve, reject) => {
-      db.transaction(tx => {
-        tx.executeSql(
-          `CREATE TABLE IF NOT EXISTS user_ingredients (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT UNIQUE NOT NULL,
-            quantity TEXT,
-            unit TEXT,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-          );`,
-          [],
-          () => {
-            tx.executeSql(
-              `CREATE TABLE IF NOT EXISTS recipes (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                ingredients TEXT NOT NULL,
-                instructions TEXT,
-                image_url TEXT,
-                prep_time INTEGER,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-              );`,
-              [],
-              () => {
-                resolve();
-              },
-              (_, error) => {
-                reject(error);
-                return false;
-              }
-            );
-          },
-          (_, error) => {
-            reject(error);
-            return false;
-          }
-        );
-      });
-    });
-
-    // Insertar algunas recetas de ejemplo
-    await insertSampleRecipes();
-    
-    console.log('Database initialized successfully');
-  } catch (error) {
-    console.error('Error initializing database:', error);
-  }
-};
-
-const insertSampleRecipes = async () => {
-  try {
-    const sampleRecipes = [
-      {
-        name: "Pasta con tomate",
-        ingredients: ["pasta", "tomate", "ajo", "aceite", "sal"],
-        instructions: "1. Hervir la pasta\n2. Saltear ajo en aceite\n3. Agregar tomate\n4. Mezclar con pasta"
-      },
-      {
-        name: "Ensalada simple",
-        ingredients: ["lechuga", "tomate", "cebolla", "aceite", "vinagre"],
-        instructions: "1. Cortar verduras\n2. Mezclar\n3. Aliñar con aceite y vinagre"
-      }
-    ];
-
-    await new Promise<void>((resolve, reject) => {
-      db.transaction(tx => {
-        sampleRecipes.forEach(recipe => {
-          tx.executeSql(
-            'INSERT OR IGNORE INTO recipes (name, ingredients, instructions) VALUES (?, ?, ?)',
-            [recipe.name, JSON.stringify(recipe.ingredients), recipe.instructions],
-            undefined,
-            (_, error) => {
-              reject(error);
-              return false;
-            }
-          );
-        });
-        resolve();
-      });
-    });
-  } catch (error) {
-    console.error('Error inserting sample recipes:', error);
-  }
-};
-
-// Funciones para ingredientes
-export const addUserIngredient = async (name: string, quantity: string, unit: string): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'INSERT OR REPLACE INTO user_ingredients (name, quantity, unit) VALUES (?, ?, ?)',
-        [name.toLowerCase().trim(), quantity, unit],
-        () => resolve(),
-        (_, error) => {
-          reject(error);
-          return false;
+    // Inicializar almacenamiento si no existe
+    if (!localStorage.getItem(WEB_STORAGE_KEY.USER_INGREDIENTS)) {
+      localStorage.setItem(WEB_STORAGE_KEY.USER_INGREDIENTS, JSON.stringify([]));
+    }
+    if (!localStorage.getItem(WEB_STORAGE_KEY.RECIPES)) {
+      const sampleRecipes = [
+        {
+          id: 1,
+          name: "Pasta con tomate",
+          ingredients: ["pasta", "tomate", "ajo", "aceite", "sal"],
+          instructions: "1. Hervir la pasta\n2. Saltear ajo en aceite\n3. Agregar tomate\n4. Mezclar con pasta",
+          created_at: new Date().toISOString()
+        },
+        {
+          id: 2,
+          name: "Ensalada simple",
+          ingredients: ["lechuga", "tomate", "cebolla", "aceite", "vinagre"],
+          instructions: "1. Cortar verduras\n2. Mezclar\n3. Aliñar con aceite y vinagre",
+          created_at: new Date().toISOString()
         }
-      );
-    });
-  });
+      ];
+      localStorage.setItem(WEB_STORAGE_KEY.RECIPES, JSON.stringify(sampleRecipes));
+    }
+    console.log('Storage initialized successfully');
+  } catch (error) {
+    console.error('Error initializing storage:', error);
+  }
+};
+
+export const addUserIngredient = async (name: string, quantity: string, unit: string): Promise<void> => {
+  try {
+    const ingredients = JSON.parse(localStorage.getItem(WEB_STORAGE_KEY.USER_INGREDIENTS) || '[]');
+    const newIngredient = {
+      id: Date.now(),
+      name: name.toLowerCase().trim(),
+      quantity,
+      unit,
+      created_at: new Date().toISOString()
+    };
+    ingredients.push(newIngredient);
+    localStorage.setItem(WEB_STORAGE_KEY.USER_INGREDIENTS, JSON.stringify(ingredients));
+  } catch (error) {
+    console.error('Error adding ingredient:', error);
+    throw error;
+  }
 };
 
 export const getUserIngredients = async (): Promise<UserIngredient[]> => {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'SELECT * FROM user_ingredients ORDER BY name',
-        [],
-        (_, { rows: { _array } }) => resolve(_array as UserIngredient[]),
-        (_, error) => {
-          reject(error);
-          return false;
-        }
-      );
-    });
-  });
+  try {
+    return JSON.parse(localStorage.getItem(WEB_STORAGE_KEY.USER_INGREDIENTS) || '[]');
+  } catch (error) {
+    console.error('Error getting ingredients:', error);
+    return [];
+  }
 };
 
 export const removeUserIngredient = async (id: number): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'DELETE FROM user_ingredients WHERE id = ?',
-        [id],
-        () => resolve(),
-        (_, error) => {
-          reject(error);
-          return false;
-        }
-      );
-    });
-  });
+  try {
+    const ingredients = JSON.parse(localStorage.getItem(WEB_STORAGE_KEY.USER_INGREDIENTS) || '[]');
+    const filteredIngredients = ingredients.filter((ing: UserIngredient) => ing.id !== id);
+    localStorage.setItem(WEB_STORAGE_KEY.USER_INGREDIENTS, JSON.stringify(filteredIngredients));
+  } catch (error) {
+    console.error('Error removing ingredient:', error);
+    throw error;
+  }
 };
 
 export const getAllRecipes = async (): Promise<Recipe[]> => {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'SELECT * FROM recipes ORDER BY name',
-        [],
-        (_, { rows: { _array } }) => resolve(_array as Recipe[]),
-        (_, error) => {
-          reject(error);
-          return false;
-        }
-      );
-    });
-  });
-};
+  try {
+    return JSON.parse(localStorage.getItem(WEB_STORAGE_KEY.RECIPES) || '[]');
+  } catch (error) {
+    console.error('Error getting recipes:', error);
+    return [];
+  }
+}; 
