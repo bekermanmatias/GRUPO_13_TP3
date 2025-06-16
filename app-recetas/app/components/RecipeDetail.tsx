@@ -11,13 +11,10 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { Ionicons } from '@expo/vector-icons'; 
-
-
-interface RecipeDetailProps {
-  id: string;
-  navigation?: any; // Para el botón de volver
-}
+import { Ionicons } from '@expo/vector-icons';
+import { addFavorite, removeFavorite, subscribeFavorites } from '../../database/favorites';
+import { auth } from '../../firebaseConfig';
+import { useRouter } from 'expo-router';
 
 interface Recipe {
   idMeal: string;
@@ -25,6 +22,10 @@ interface Recipe {
   strMealThumb: string;
   strInstructions: string;
   [key: string]: any;
+}
+
+interface RecipeDetailProps {
+  id: string;
 }
 
 interface CheckedIngredients {
@@ -41,19 +42,49 @@ const isValidYoutubeUrl = (url: string | null): boolean => {
   }
 };
 
-export default function RecipeDetail({ id, navigation }: RecipeDetailProps) {
+export default function RecipeDetail({ id }: RecipeDetailProps) {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [checkedIngredients, setCheckedIngredients] = useState<CheckedIngredients>({});
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      try {
+        const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
+        if (response.data.meals && response.data.meals[0]) {
+          setRecipe(response.data.meals[0]);
+        }
+      } catch (error) {
+        console.error('Error al cargar la receta:', error);
+      }
+    };
+
+    fetchRecipe();
+  }, [id]);
+
+  useEffect(() => {
+    let unsubscribe: () => void;
+
+    if (auth.currentUser) {
+      unsubscribe = subscribeFavorites((favorites) => {
+        setIsFavorite(favorites.some(r => r.idMeal === id));
+      });
+    }
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
+  }, [id]);
 
   useEffect(() => {
     // Limpiar el estado anterior
-    setRecipe(null);
+    setCheckedIngredients({});
     // Cargar los nuevos datos
-    fetchRecipe();
-    checkIfFavorite();
     loadCheckedIngredients();
-  }, [id]); // Agregar id como dependencia
+  }, [id]);
 
   const loadCheckedIngredients = async () => {
     try {
@@ -84,44 +115,32 @@ export default function RecipeDetail({ id, navigation }: RecipeDetailProps) {
     }
   };
 
-  const fetchRecipe = async () => {
-    try {
-      console.log('Fetching recipe with ID:', id);
-      const res = await axios.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
-      if (res.data.meals && res.data.meals[0]) {
-        console.log('Recipe found:', res.data.meals[0].strMeal);
-        setRecipe(res.data.meals[0]);
-      } else {
-        console.log('No recipe found for ID:', id);
-      }
-    } catch (err) {
-      console.error('Error al cargar la receta:', err);
-    }
-  };
-
-  const checkIfFavorite = async () => {
-    const stored = await AsyncStorage.getItem('favorites');
-    const parsed: Recipe[] = stored ? JSON.parse(stored) : [];
-    setIsFavorite(parsed.some(r => r.idMeal === id));
-  };
-
   const toggleFavorite = async () => {
-    const stored = await AsyncStorage.getItem('favorites');
-    const parsed: Recipe[] = stored ? JSON.parse(stored) : [];
-
-    let updated: Recipe[];
-    if (isFavorite) {
-      updated = parsed.filter(r => r.idMeal !== id);
-    } else {
-      if (!recipe) return;
-      updated = [...parsed, recipe];
+    if (!auth.currentUser) {
+      router.push('/profile');
+      return;
     }
 
-    await AsyncStorage.setItem('favorites', JSON.stringify(updated));
-    setIsFavorite(!isFavorite);
+    try {
+      if (recipe) {
+        if (isFavorite) {
+          await removeFavorite(recipe.idMeal);
+        } else {
+          await addFavorite(recipe);
+        }
+      }
+    } catch (error) {
+      console.error('Error al actualizar favorito:', error);
+    }
   };
 
-  if (!recipe) return <Text style={{ padding: 16 }}>Cargando...</Text>;
+  if (!recipe) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Cargando...</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -130,7 +149,7 @@ export default function RecipeDetail({ id, navigation }: RecipeDetailProps) {
         <View style={styles.headerButtons}>
           <TouchableOpacity 
             style={styles.headerButton} 
-            onPress={() => navigation.goBack()}
+            onPress={() => router.back()}
           >
             <Ionicons name="arrow-back" size={24} color="#4CAF50" />
           </TouchableOpacity>

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { addFavorite, removeFavorite, subscribeFavorites } from '../../database/favorites';
+import { auth } from '../../firebaseConfig';
 
 interface Recipe {
   idMeal: string;
@@ -19,29 +20,38 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
   const router = useRouter();
 
   useEffect(() => {
-    checkIfFavorite();
-  }, []);
+    let unsubscribe: () => void;
 
-  const checkIfFavorite = async () => {
-    const stored = await AsyncStorage.getItem('favorites');
-    const parsed: Recipe[] = stored ? JSON.parse(stored) : [];
-    setIsFavorite(parsed.some(r => r.idMeal === recipe.idMeal));
-  };
-
-  const toggleFavorite = async (event: any) => {
-    event.preventDefault(); // Evita la navegación al detalle
-    const stored = await AsyncStorage.getItem('favorites');
-    const parsed: Recipe[] = stored ? JSON.parse(stored) : [];
-
-    let updated: Recipe[];
-    if (isFavorite) {
-      updated = parsed.filter(r => r.idMeal !== recipe.idMeal);
-    } else {
-      updated = [...parsed, recipe];
+    if (auth.currentUser) {
+      unsubscribe = subscribeFavorites((favorites) => {
+        setIsFavorite(favorites.some(r => r.idMeal === recipe.idMeal));
+      });
     }
 
-    await AsyncStorage.setItem('favorites', JSON.stringify(updated));
-    setIsFavorite(!isFavorite);
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
+  }, [recipe.idMeal]);
+
+  const toggleFavorite = async (event: any) => {
+    event.stopPropagation(); // Evita la navegación al detalle
+    
+    if (!auth.currentUser) {
+      router.push('/profile');
+      return;
+    }
+
+    try {
+      if (isFavorite) {
+        await removeFavorite(recipe.idMeal);
+      } else {
+        await addFavorite(recipe);
+      }
+    } catch (error) {
+      console.error('Error al actualizar favorito:', error);
+    }
   };
 
   const handlePress = () => {
