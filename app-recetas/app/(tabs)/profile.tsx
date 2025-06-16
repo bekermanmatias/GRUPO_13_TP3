@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, Button } from 'react-native';
-import { signOut, User } from 'firebase/auth'; // Importar User
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { signOut, User } from 'firebase/auth';
 import { auth } from '../../firebaseConfig';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Profile() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);  // <User | null>
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const currentUser = auth.currentUser;
@@ -32,16 +33,15 @@ export default function Profile() {
 
   return (
     <View style={styles.container}>
-      <Image
-        source={{
-          uri: user.photoURL || 'https://i.pravatar.cc/120?u=' + user.email,
-        }}
-        style={styles.avatar}
-      />
+      <View style={styles.avatarContainer}>
+        <Ionicons name="person" size={60} color="#fff" />
+      </View>
       <Text style={styles.name}>{user.displayName || user.email?.split('@')[0]}</Text>
       <Text style={styles.email}>{user.email}</Text>
       
-      <Button title="Cerrar sesión" onPress={handleLogout} />
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Text style={styles.logoutText}>Cerrar sesión</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -52,21 +52,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
+    backgroundColor: '#F8FFFA',
   },
-  avatar: {
+  avatarContainer: {
     width: 120,
     height: 120,
     borderRadius: 60,
+    backgroundColor: '#9E9E9E',
     marginBottom: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   name: {
     fontSize: 22,
     fontWeight: 'bold',
+    marginBottom: 8,
   },
   email: {
     fontSize: 16,
     color: 'gray',
-    marginTop: 4,
-    marginBottom: 16,
+    marginBottom: 32,
+  },
+  logoutButton: {
+    backgroundColor: '#4CAF50',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  logoutText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
