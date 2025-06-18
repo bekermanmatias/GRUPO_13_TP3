@@ -3,6 +3,9 @@ import { View, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-nativ
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebaseConfig';
 import { useRouter } from 'expo-router';
+import { useColorScheme } from '../../hooks/useColorScheme';
+import { Colors } from '../../constants/Colors';
+import { useThemeColor } from '../../hooks/useThemeColor';
 
 export default function RegisterScreen() {
   const [email, setEmail] = useState('');
@@ -10,6 +13,11 @@ export default function RegisterScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
+  const theme = useColorScheme();
+  
+  const backgroundColor = useThemeColor({}, 'background');
+  const textColor = useThemeColor({}, 'text');
+  const buttonColor = useThemeColor({}, 'buttonPrimary');
 
   const handleRegister = async () => {
     if (password !== confirmPassword) {
@@ -26,12 +34,17 @@ export default function RegisterScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Registro</Text>
+    <View style={[styles.container, { backgroundColor }]}>
+      <Text style={[styles.title, { color: textColor }]}>Registro</Text>
 
       <TextInput
         placeholder="Email"
-        style={styles.input}
+        placeholderTextColor="#888"
+        style={[styles.input, { 
+          backgroundColor: Colors[theme].inputBackground,
+          color: textColor,
+          borderColor: theme === 'dark' ? '#555' : '#ddd'
+        }]}
         keyboardType="email-address"
         autoCapitalize="none"
         value={email}
@@ -40,7 +53,12 @@ export default function RegisterScreen() {
 
       <TextInput
         placeholder="Contraseña"
-        style={styles.input}
+        placeholderTextColor="#888"
+        style={[styles.input, { 
+          backgroundColor: Colors[theme].inputBackground,
+          color: textColor,
+          borderColor: theme === 'dark' ? '#555' : '#ddd'
+        }]}
         secureTextEntry
         value={password}
         onChangeText={setPassword}
@@ -48,7 +66,12 @@ export default function RegisterScreen() {
 
       <TextInput
         placeholder="Confirmar contraseña"
-        style={styles.input}
+        placeholderTextColor="#888"
+        style={[styles.input, { 
+          backgroundColor: Colors[theme].inputBackground,
+          color: textColor,
+          borderColor: theme === 'dark' ? '#555' : '#ddd'
+        }]}
         secureTextEntry
         value={confirmPassword}
         onChangeText={setConfirmPassword}
@@ -56,7 +79,7 @@ export default function RegisterScreen() {
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
+      <TouchableOpacity style={[styles.button, { backgroundColor: buttonColor }]} onPress={handleRegister}>
         <Text style={styles.buttonText}>Registrarse</Text>
       </TouchableOpacity>
 
@@ -64,7 +87,7 @@ export default function RegisterScreen() {
         style={styles.loginLink}
         onPress={() => router.push('/(auth)/login')}
       >
-        <Text style={styles.loginText}>¿Ya tenés cuenta? Iniciar sesión</Text>
+        <Text style={[styles.loginText, { color: buttonColor }]}>¿Ya tenés cuenta? Iniciar sesión</Text>
       </TouchableOpacity>
     </View>
   );
@@ -73,7 +96,6 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FFFA',
     paddingHorizontal: 20,
     justifyContent: 'center',
   },
@@ -81,16 +103,13 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 24,
-    color: '#222',
     textAlign: 'center',
   },
   input: {
-    backgroundColor: '#fff',
     paddingVertical: 14,
     paddingHorizontal: 16,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#ddd',
     marginBottom: 16,
     fontSize: 16,
   },
@@ -101,7 +120,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   button: {
-    backgroundColor: '#4CAF50',
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',
@@ -118,7 +136,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   loginText: {
-    color: '#4CAF50',
     fontWeight: '600',
     fontSize: 16,
   },

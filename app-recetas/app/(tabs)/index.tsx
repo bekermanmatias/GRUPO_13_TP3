@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
-import { View, Text, TextInput, ScrollView, StyleSheet, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import CategoryChips from '../components/CategoryChips';
 import RecipeCard from '../components/RecipeCard';
-
+import { useColorScheme } from '../../hooks/useColorScheme';
+import { Colors } from '../../constants/Colors';
+import { useThemeColor } from '../../hooks/useThemeColor';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const categories = ['All', 'Beef', 'Chicken', 'Dessert', 'Lamb', 'Pasta', 'Seafood', 'Vegan', 'Vegetarian'];
 
@@ -12,8 +15,13 @@ export default function SearchScreen() {
   const sampleRecipe = { idMeal: '12345', strMeal: 'Pizza Margarita' };
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [recipes, setRecipes] = useState([]);
+  const [recipes, setRecipes] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const theme = useColorScheme();
+  
+  const backgroundColor = useThemeColor({}, 'background');
+  const textColor = useThemeColor({}, 'text');
+  const searchBgColor = useThemeColor({}, 'searchBackground');
 
   const fetchRecipes = async (query: string, category: string) => {
     setLoading(true);
@@ -53,14 +61,14 @@ export default function SearchScreen() {
   }, []);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 20 }}>
-      <Text style={styles.title}>Search</Text>
+    <ScrollView style={[styles.container, { backgroundColor }]} contentContainerStyle={{ paddingBottom: 20 }}>
+      <Text style={[styles.title, { color: textColor }]}>Search</Text>
 
       {/* Search Bar */}
-      <View style={styles.searchBar}>
+      <View style={[styles.searchBar, { backgroundColor: searchBgColor }]}>
         <Ionicons name="search-outline" size={20} color="#888" style={{ marginRight: 8 }} />
         <TextInput
-          style={styles.input}
+          style={[styles.input, { backgroundColor: 'transparent', color: textColor }]}
           placeholder="Search recipes"
           placeholderTextColor="#aaa"
           value={searchQuery}
@@ -69,7 +77,7 @@ export default function SearchScreen() {
       </View>
 
       {/* Categories */}
-      <Text style={styles.sectionTitle}>Browse by category</Text>
+      <Text style={[styles.sectionTitle, { color: textColor }]}>Browse by category</Text>
       <CategoryChips
         categories={categories}
         selectedCategory={selectedCategory}
@@ -77,11 +85,11 @@ export default function SearchScreen() {
       />
 
       {/* Results */}
-      <Text style={styles.sectionTitle}>Results</Text>
+      <Text style={[styles.sectionTitle, { color: textColor }]}>Results</Text>
       {loading ? (
-        <ActivityIndicator size="large" color="#1B4332" style={{ marginTop: 20 }} />
+        <LoadingSpinner />
       ) : recipes.length === 0 ? (
-        <Text style={styles.noResults}>No se encontraron recetas.</Text>
+        <Text style={[styles.noResults, { color: textColor }]}>No se encontraron recetas.</Text>
       ) : (
         <View style={styles.grid}>
           {recipes.map((recipe) => (
@@ -96,8 +104,6 @@ export default function SearchScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F8FFFA',
-    paddingHorizontal: 20,
     flex: 1,
   },
   title: {
@@ -105,40 +111,41 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 20,
     marginBottom: 10,
+    paddingHorizontal: 20,
   },
   searchBar: {
     flexDirection: 'row',
-    backgroundColor: '#eef5ef',
     alignItems: 'center',
     paddingHorizontal: 10,
     borderRadius: 10,
     height: 50,
+    marginHorizontal: 20,
     marginBottom: 20,
   },
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#333',
     borderWidth: 0, 
-    outlineColor: '#eef5ef',
+    outlineColor: 'transparent',
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
     marginTop: 15,
     marginBottom: 10,
+    paddingHorizontal: 20,
   },
   noResults: {
     fontSize: 16,
-    color: '#888',
     fontStyle: 'italic',
     marginVertical: 10,
+    paddingHorizontal: 20,
   },
   grid: {
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  justifyContent: 'space-between',
-  gap: 12, // si tu versión de React Native lo soporta
-},
-
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 12,
+    paddingHorizontal: 20,
+  },
 });

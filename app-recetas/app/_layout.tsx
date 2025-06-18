@@ -3,6 +3,7 @@ import { Slot, useRouter, useSegments } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
+import { ThemeProvider } from '../hooks/useColorScheme';
 
 export default function RootLayout() {
   const [user, setUser] = useState<User | null>(null);
@@ -32,5 +33,9 @@ export default function RootLayout() {
 
   if (loading) return null;
 
-  return <Slot />;
+  return (
+    <ThemeProvider>
+      <Slot />
+    </ThemeProvider>
+  );
 }

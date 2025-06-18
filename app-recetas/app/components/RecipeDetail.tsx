@@ -16,6 +16,8 @@ import { addFavorite, removeFavorite, subscribeFavorites } from '../../database/
 import { updateCheckedIngredients, subscribeToCheckedIngredients, clearCheckedIngredients } from '../../database/ingredients';
 import { auth } from '../../firebaseConfig';
 import { useRouter } from 'expo-router';
+import { useThemeColor } from '../../hooks/useThemeColor';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 interface Recipe {
   idMeal: string;
@@ -48,6 +50,12 @@ export default function RecipeDetail({ id }: RecipeDetailProps) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [checkedIngredients, setCheckedIngredients] = useState<CheckedIngredients>({});
   const router = useRouter();
+  
+  const backgroundColor = useThemeColor({}, 'background');
+  const textColor = useThemeColor({}, 'text');
+  const cardBgColor = useThemeColor({}, 'cardBackground');
+  const buttonPrimary = useThemeColor({}, 'buttonPrimary');
+  const buttonSecondary = useThemeColor({}, 'buttonSecondary');
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -142,11 +150,7 @@ export default function RecipeDetail({ id }: RecipeDetailProps) {
   };
 
   if (!recipe) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Cargando...</Text>
-      </View>
-    );
+    return <LoadingSpinner />;
   }
 
   // Extraer ingredientes y medidas
@@ -160,41 +164,41 @@ export default function RecipeDetail({ id }: RecipeDetailProps) {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, { backgroundColor }]}>
       <View style={styles.imageContainer}>
         <Image source={{ uri: recipe.strMealThumb }} style={styles.image} />
         <View style={styles.headerButtons}>
           <TouchableOpacity 
-            style={styles.headerButton} 
+            style={[styles.headerButton, { backgroundColor: cardBgColor }]} 
             onPress={() => router.back()}
           >
-            <Ionicons name="arrow-back" size={24} color="#4CAF50" />
+            <Ionicons name="arrow-back" size={24} color={buttonPrimary} />
           </TouchableOpacity>
 
           <TouchableOpacity 
-            style={styles.headerButton}
+            style={[styles.headerButton, { backgroundColor: cardBgColor }]}
             onPress={toggleFavorite}
           >
             <Ionicons 
-              name={isFavorite ? "bookmark" : "bookmark-outline"} 
+              name={isFavorite ? "heart" : "heart-outline"} 
               size={24} 
-              color="#4CAF50" 
+              color={isFavorite ? "#FF6B6B" : buttonPrimary} 
             />
           </TouchableOpacity>
         </View>
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.title}>{recipe.strMeal}</Text>
+        <Text style={[styles.title, { color: textColor }]}>{recipe.strMeal}</Text>
 
         {recipe.strCategory && (
           <View style={styles.categoryContainer}>
-            <Ionicons name="restaurant-outline" size={20} color="#4CAF50" />
-            <Text style={styles.categoryText}>{recipe.strCategory}</Text>
+            <Ionicons name="restaurant-outline" size={20} color={buttonPrimary} />
+            <Text style={[styles.categoryText, { color: textColor }]}>{recipe.strCategory}</Text>
             {recipe.strArea && (
               <>
-                <Text style={styles.categoryDot}>•</Text>
-                <Text style={styles.categoryText}>{recipe.strArea}</Text>
+                <Text style={[styles.categoryDot, { color: textColor }]}>•</Text>
+                <Text style={[styles.categoryText, { color: textColor }]}>{recipe.strArea}</Text>
               </>
             )}
           </View>
@@ -203,21 +207,21 @@ export default function RecipeDetail({ id }: RecipeDetailProps) {
         {recipe.strTags && (
           <View style={styles.tagsContainer}>
             {recipe.strTags.split(',').map((tag: string, index: number) => (
-              <View key={index} style={styles.tagChip}>
-                <Text style={styles.tagText}>{tag.trim()}</Text>
+              <View key={index} style={[styles.tagChip, { backgroundColor: buttonSecondary }]}>
+                <Text style={[styles.tagText, { color: buttonPrimary }]}>{tag.trim()}</Text>
               </View>
             ))}
           </View>
         )}
 
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Ingredients</Text>
+          <Text style={[styles.sectionTitle, { color: textColor }]}>Ingredients</Text>
           {Object.keys(checkedIngredients).length > 0 && (
             <TouchableOpacity
-              style={styles.clearButton}
+              style={[styles.clearButton, { backgroundColor: buttonSecondary }]}
               onPress={handleClearIngredients}
             >
-              <Text style={styles.clearButtonText}>Clear all</Text>
+              <Text style={[styles.clearButtonText, { color: textColor }]}>Clear all</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -230,7 +234,8 @@ export default function RecipeDetail({ id }: RecipeDetailProps) {
           >
             <View style={[
               styles.checkbox,
-              checkedIngredients[ingredient] && styles.checkboxChecked
+              { borderColor: buttonPrimary },
+              checkedIngredients[ingredient] && { backgroundColor: buttonPrimary }
             ]}>
               {checkedIngredients[ingredient] && (
                 <Ionicons name="checkmark" size={16} color="#fff" />
@@ -238,6 +243,7 @@ export default function RecipeDetail({ id }: RecipeDetailProps) {
             </View>
             <Text style={[
               styles.ingredientText,
+              { color: textColor },
               checkedIngredients[ingredient] && styles.ingredientTextChecked
             ]}>
               {measure} {ingredient}
@@ -245,7 +251,7 @@ export default function RecipeDetail({ id }: RecipeDetailProps) {
           </TouchableOpacity>
         ))}
 
-        <Text style={styles.sectionTitle}>Instructions</Text>
+        <Text style={[styles.sectionTitle, { color: textColor }]}>Instructions</Text>
         {recipe.strInstructions
           .split('\r\n')
           .filter(instruction => {
@@ -264,22 +270,22 @@ export default function RecipeDetail({ id }: RecipeDetailProps) {
           .filter(instruction => instruction.length > 0) // Eliminar cualquier línea que quedó vacía
           .map((instruction, index) => (
             <View key={index} style={styles.instructionStep}>
-              <Text style={styles.stepNumber}>{index + 1}</Text>
-              <Text style={styles.instructionText}>{instruction}</Text>
+              <Text style={[styles.stepNumber, { backgroundColor: buttonPrimary }]}>{index + 1}</Text>
+              <Text style={[styles.instructionText, { color: textColor }]}>{instruction}</Text>
             </View>
           ))}
 
         {recipe.strYoutube && isValidYoutubeUrl(recipe.strYoutube) && (
           <View style={styles.youtubeSection}>
-            <Text style={styles.sectionTitle}>Video Tutorial</Text>
+            <Text style={[styles.sectionTitle, { color: textColor }]}>Video Tutorial</Text>
             <TouchableOpacity 
-              style={styles.youtubeButton}
+              style={[styles.youtubeButton, { backgroundColor: cardBgColor }]}
               onPress={() => {
                 Linking.openURL(recipe.strYoutube);
               }}
             >
               <Ionicons name="logo-youtube" size={24} color="#FF0000" />
-              <Text style={styles.youtubeButtonText}>Watch on YouTube</Text>
+              <Text style={[styles.youtubeButtonText, { color: textColor }]}>Watch on YouTube</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -290,8 +296,9 @@ export default function RecipeDetail({ id }: RecipeDetailProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    flex: 1,
   },
+
   imageContainer: {
     position: 'relative',
     width: '100%',
@@ -310,7 +317,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   headerButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
     borderRadius: 20,
     padding: 8,
     elevation: 2,
@@ -325,7 +331,6 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 16,
-    color: '#555',
     marginBottom: 16,
   },
   sectionTitle: {
@@ -344,17 +349,15 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: '#4CAF50',
     marginRight: 12,
     justifyContent: 'center',
     alignItems: 'center',
   },
   checkboxChecked: {
-    backgroundColor: '#4CAF50',
+    // Se maneja dinámicamente en el componente
   },
   ingredientText: {
     fontSize: 16,
-    color: '#333',
     flex: 1,
   },
   ingredientTextChecked: {
@@ -375,7 +378,6 @@ const styles = StyleSheet.create({
   },
   stepTime: {
     fontSize: 14,
-    color: '#666',
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -385,14 +387,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   clearButton: {
-    backgroundColor: '#f0f0f0',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
   },
   clearButtonText: {
     fontSize: 12,
-    color: '#666',
   },
   categoryContainer: {
     flexDirection: 'row',
@@ -401,11 +401,9 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontSize: 16,
-    color: '#666',
     marginLeft: 8,
   },
   categoryDot: {
-    color: '#666',
     marginHorizontal: 8,
   },
   tagsContainer: {
@@ -414,7 +412,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   tagChip: {
-    backgroundColor: '#E8F5E9',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 16,
@@ -422,7 +419,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   tagText: {
-    color: '#4CAF50',
     fontSize: 14,
   },
   instructionStep: {
@@ -431,7 +427,6 @@ const styles = StyleSheet.create({
     paddingRight: 16,
   },
   stepNumber: {
-    backgroundColor: '#4CAF50',
     color: '#fff',
     width: 24,
     height: 24,
@@ -446,7 +441,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     lineHeight: 24,
-    color: '#333',
   },
   youtubeSection: {
     marginTop: 24,
@@ -454,15 +448,14 @@ const styles = StyleSheet.create({
   youtubeButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF',
     padding: 12,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#E0E0E0',
   },
   youtubeButtonText: {
     marginLeft: 8,
     fontSize: 16,
-    color: '#333',
+    fontWeight: '500',
   },
 });

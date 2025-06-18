@@ -8,7 +8,6 @@ import {
   StyleSheet,
   TextInput,
   Alert,
-  ActivityIndicator,
   Image,
   ScrollView,
   Dimensions,
@@ -19,6 +18,10 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import RecipeCard from '../components/RecipeCard';
+import { useColorScheme } from '../../hooks/useColorScheme';
+import { Colors } from '../../constants/Colors';
+import { useThemeColor } from '../../hooks/useThemeColor';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const windowWidth = Dimensions.get('window').width;
 const cardWidth = (windowWidth - 48) / 2;
@@ -61,6 +64,14 @@ const Ingredients = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loadingIngredients, setLoadingIngredients] = useState(false);
   const [allIngredients, setAllIngredients] = useState<string[]>([]);
+  const [maxResults, setMaxResults] = useState(12);
+  const theme = useColorScheme();
+  
+  const backgroundColor = useThemeColor({}, 'background');
+  const textColor = useThemeColor({}, 'text');
+  const cardBgColor = useThemeColor({}, 'cardBackground');
+  const searchBgColor = useThemeColor({}, 'searchBackground');
+  const buttonPrimary = useThemeColor({}, 'buttonPrimary');
 
   useEffect(() => {
     loadAvailableIngredients();
@@ -152,12 +163,30 @@ const Ingredients = () => {
   const getFilteredIngredients = () => {
     if (!searchText.trim()) return [];
     
-    const searchLower = searchText.toLowerCase().trim();
-    return allIngredients.filter(ingredient => 
-      ingredient && typeof ingredient === 'string' && 
-      ingredient.toLowerCase().includes(searchLower)
-    );
+    return allIngredients
+      .filter(ingredient => 
+        ingredient.toLowerCase().includes(searchText.toLowerCase())
+      )
+      .slice(0, maxResults);
   };
+
+  const getTotalMatches = () => {
+    if (!searchText.trim()) return 0;
+    
+    return allIngredients
+      .filter(ingredient => 
+        ingredient.toLowerCase().includes(searchText.toLowerCase())
+      ).length;
+  };
+
+  const loadMoreResults = () => {
+    setMaxResults(prev => prev + 12);
+  };
+
+  // Resetear maxResults cuando cambia la búsqueda
+  useEffect(() => {
+    setMaxResults(12);
+  }, [searchText]);
 
   const renderIngredientItem = ({ item }: { item: string }) => (
     <TouchableOpacity
@@ -202,15 +231,16 @@ const Ingredients = () => {
   const filteredIngredients = getFilteredIngredients();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Ingredientes</Text>
+    <View style={[styles.container, { backgroundColor }]}>
+      <Text style={[styles.title, { color: textColor }]}>Ingredientes</Text>
       
       {/* Búsqueda de ingredientes */}
-      <View style={styles.searchContainer}>
+      <View style={[styles.searchContainer, { backgroundColor: searchBgColor }]}>
         <Ionicons name="search-outline" size={20} color="#888" style={styles.searchIcon} />
         <TextInput
-          style={styles.searchInput}
+          style={[styles.searchInput, { backgroundColor: 'transparent', color: textColor }]}
           placeholder="Buscar ingrediente..."
+          placeholderTextColor="#aaa"
           value={searchText}
           onChangeText={setSearchText}
         />
@@ -220,19 +250,21 @@ const Ingredients = () => {
         {/* Mostrar ingredientes populares solo si no hay búsqueda */}
         {!searchText.trim() && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Ingredientes populares</Text>
+            <Text style={[styles.sectionTitle, { color: textColor }]}>Ingredientes populares</Text>
             <View style={styles.popularGrid}>
               {commonIngredients.map((ingredient) => (
                 <TouchableOpacity
                   key={ingredient}
                   style={[
                     styles.popularItem,
+                    { backgroundColor: cardBgColor },
                     selectedIngredient === ingredient && styles.selectedIngredient
                   ]}
                   onPress={() => searchRecipesByIngredient(ingredient)}
                 >
                   <Text style={[
                     styles.popularText,
+                    { color: textColor },
                     selectedIngredient === ingredient && styles.selectedText
                   ]}>
                     {ingredient}
@@ -246,31 +278,45 @@ const Ingredients = () => {
         {/* Resultados de búsqueda */}
         {searchText.trim() !== '' && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Resultados de búsqueda</Text>
+            <Text style={[styles.sectionTitle, { color: textColor }]}>Resultados de búsqueda</Text>
             {loadingIngredients ? (
-              <ActivityIndicator size="small" color="#4CAF50" style={styles.loader} />
+              <LoadingSpinner size="small" style={styles.loader} />
             ) : filteredIngredients.length > 0 ? (
-              <View style={styles.searchResults}>
-                {filteredIngredients.map((ingredient) => (
-                  <TouchableOpacity
-                    key={ingredient}
-                    style={[
-                      styles.searchResultItem,
-                      selectedIngredient === ingredient && styles.selectedIngredient
-                    ]}
-                    onPress={() => searchRecipesByIngredient(ingredient)}
+              <>
+                <View style={styles.searchResults}>
+                  {filteredIngredients.map((ingredient) => (
+                    <TouchableOpacity
+                      key={ingredient}
+                      style={[
+                        styles.searchResultItem,
+                        { backgroundColor: cardBgColor },
+                        selectedIngredient === ingredient && styles.selectedIngredient
+                      ]}
+                      onPress={() => searchRecipesByIngredient(ingredient)}
+                    >
+                      <Text style={[
+                        styles.searchResultText,
+                        { color: textColor },
+                        selectedIngredient === ingredient && styles.selectedText
+                      ]}>
+                        {ingredient}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+                {getTotalMatches() > maxResults && (
+                  <TouchableOpacity 
+                    style={[styles.loadMoreButton, { backgroundColor: buttonPrimary }]} 
+                    onPress={loadMoreResults}
                   >
-                    <Text style={[
-                      styles.searchResultText,
-                      selectedIngredient === ingredient && styles.selectedText
-                    ]}>
-                      {ingredient}
+                    <Text style={styles.loadMoreText}>
+                      Ver más... ({getTotalMatches() - maxResults} restantes)
                     </Text>
                   </TouchableOpacity>
-                ))}
-              </View>
+                )}
+              </>
             ) : (
-              <Text style={styles.noResults}>No se encontraron ingredientes</Text>
+              <Text style={[styles.noResults, { color: textColor }]}>No se encontraron ingredientes</Text>
             )}
           </View>
         )}
@@ -278,11 +324,11 @@ const Ingredients = () => {
         {/* Resultados de recetas */}
         {selectedIngredient && (
           <View style={[styles.section, styles.recipesSection]}>
-            <Text style={styles.sectionTitle}>
+            <Text style={[styles.sectionTitle, { color: textColor }]}>
               Recetas con {selectedIngredient}
             </Text>
             {loading ? (
-              <ActivityIndicator size="large" color="#4CAF50" style={styles.loader} />
+              <LoadingSpinner size="large" style={styles.loader} />
             ) : recipes.length > 0 ? (
               <View style={styles.recipesContainer}>
                 {recipes.map((recipe) => (
@@ -290,7 +336,7 @@ const Ingredients = () => {
                 ))}
               </View>
             ) : (
-              <Text style={styles.noResults}>No se encontraron recetas</Text>
+              <Text style={[styles.noResults, { color: textColor }]}>No se encontraron recetas</Text>
             )}
           </View>
         )}
@@ -302,7 +348,6 @@ const Ingredients = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FFFA',
   },
   scrollContainer: {
     flex: 1,
@@ -317,19 +362,17 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
     borderRadius: 10,
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     marginHorizontal: 20,
-    marginBottom: 15,
-    elevation: 2,
+    marginBottom: 20,
+    height: 50,
   },
   searchIcon: {
-    marginRight: 10,
+    marginRight: 8,
   },
   searchInput: {
     flex: 1,
-    height: 50,
     fontSize: 16,
   },
   section: {
@@ -343,7 +386,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 15,
-    color: '#333',
     paddingHorizontal: 20,
   },
   popularGrid: {
@@ -352,7 +394,6 @@ const styles = StyleSheet.create({
     marginHorizontal: -5,
   },
   popularItem: {
-    backgroundColor: '#fff',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 10,
@@ -363,27 +404,25 @@ const styles = StyleSheet.create({
   },
   popularText: {
     fontSize: 14,
-    color: '#333',
     textAlign: 'center',
   },
   searchResults: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginHorizontal: -5,
+    justifyContent: 'space-between',
   },
   searchResultItem: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 8,
     margin: 5,
-    elevation: 2,
-    minWidth: '45%',
+    elevation: 1,
+    width: '30%',
     alignItems: 'center',
   },
   searchResultText: {
     fontSize: 14,
-    color: '#333',
     textAlign: 'center',
   },
   selectedIngredient: {
@@ -422,13 +461,26 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   loader: {
-    marginVertical: 20,
+    marginTop: 20,
   },
   noResults: {
     fontSize: 16,
-    color: '#888',
+    fontStyle: 'italic',
+    marginVertical: 10,
     textAlign: 'center',
-    marginTop: 10,
+  },
+  loadMoreButton: {
+    padding: 12,
+    borderRadius: 8,
+    margin: 5,
+    elevation: 1,
+    width: '100%',
+    alignItems: 'center',
+  },
+  loadMoreText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#fff',
   },
 });
 

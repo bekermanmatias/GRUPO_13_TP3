@@ -2,8 +2,14 @@ import { useEffect } from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { initDatabase } from '../../database/database';
+import { useThemeColor } from '../../hooks/useThemeColor';
 
-export default function TabsLayout() {
+export default function TabLayout() {
+  const backgroundColor = useThemeColor({}, 'background');
+  const tabBarBg = useThemeColor({}, 'cardBackground');
+  const activeTintColor = useThemeColor({}, 'buttonPrimary');
+  const inactiveTintColor = useThemeColor({}, 'tabIconDefault');
+
   useEffect(() => {
     initDatabase();
   }, []);
@@ -11,29 +17,26 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
+        tabBarActiveTintColor: activeTintColor,
+        tabBarInactiveTintColor: inactiveTintColor,
         headerShown: false,
-        tabBarActiveTintColor: '#4CAF50',
-        tabBarInactiveTintColor: '#777',
         tabBarStyle: {
-          backgroundColor: '#fff',
-          borderTopWidth: 0.5,
-          height: 60,
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-        },
-        tabBarLabelStyle: {
-          fontSize: 12,
+          backgroundColor: tabBarBg,
+          borderTopWidth: 0,
+          elevation: 8,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 4,
         },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home-outline" size={size} color={color} />
+          title: 'Search',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'search' : 'search-outline'} size={24} color={color} />
           ),
         }}
       />
@@ -41,17 +44,17 @@ export default function TabsLayout() {
         name="ingredients"
         options={{
           title: 'Ingredients',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="restaurant-outline" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'nutrition' : 'nutrition-outline'} size={24} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="favorites"
         options={{
-          title: 'Saved',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="bookmark-outline" size={size} color={color} />
+          title: 'Favorites',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'heart' : 'heart-outline'} size={24} color={color} />
           ),
         }}
       />
@@ -59,8 +62,8 @@ export default function TabsLayout() {
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'person' : 'person-outline'} size={24} color={color} />
           ),
         }}
       />

@@ -3,6 +3,7 @@ import { View, ScrollView, Text, StyleSheet } from 'react-native';
 import { auth } from '../../firebaseConfig';
 import { subscribeFavorites } from '../../database/favorites';
 import RecipeCard from '../components/RecipeCard';
+import { useThemeColor } from '../../hooks/useThemeColor';
 
 interface Recipe {
   idMeal: string;
@@ -12,49 +13,30 @@ interface Recipe {
 
 export default function FavoritesScreen() {
   const [favorites, setFavorites] = useState<Recipe[]>([]);
+  
+  const backgroundColor = useThemeColor({}, 'background');
+  const textColor = useThemeColor({}, 'text');
 
   useEffect(() => {
-    let unsubscribe: () => void;
+    const unsubscribe = subscribeFavorites((newFavorites) => {
+      setFavorites(newFavorites);
+    });
 
-    if (auth.currentUser) {
-      unsubscribe = subscribeFavorites((newFavorites) => {
-        setFavorites(newFavorites);
-      });
-    } else {
-      setFavorites([]);
-    }
-
-    return () => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    };
-  }, [auth.currentUser]);
-
-  if (!auth.currentUser) {
-    return (
-      <ScrollView style={styles.container}>
-        <View style={styles.content}>
-          <Text style={styles.title}>Inicia sesión para ver tus favoritos</Text>
-        </View>
-      </ScrollView>
-    );
-  }
+    return unsubscribe;
+  }, []);
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Favoritos</Text>
-        {favorites.length === 0 ? (
-          <Text style={styles.noResults}>No tienes recetas favoritas</Text>
-        ) : (
-          <View style={styles.grid}>
-            {favorites.map((recipe) => (
-              <RecipeCard key={recipe.idMeal} recipe={recipe} />
-            ))}
-          </View>
-        )}
-      </View>
+    <ScrollView style={[styles.container, { backgroundColor }]}>
+      <Text style={[styles.title, { color: textColor }]}>Mis favoritos</Text>
+      {favorites.length === 0 ? (
+        <Text style={[styles.emptyText, { color: textColor }]}>No tienes recetas favoritas aún</Text>
+      ) : (
+        <View style={styles.recipesContainer}>
+          {favorites.map((recipe) => (
+            <RecipeCard key={recipe.idMeal} recipe={recipe} />
+          ))}
+        </View>
+      )}
     </ScrollView>
   );
 }
@@ -62,27 +44,22 @@ export default function FavoritesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FFFA',
-  },
-  content: {
     padding: 20,
   },
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 20,
     marginBottom: 20,
   },
-  noResults: {
+  emptyText: {
     fontSize: 16,
-    color: '#888',
-    fontStyle: 'italic',
-    marginVertical: 10,
+    textAlign: 'center',
+    marginTop: 50,
   },
-  grid: {
+  recipesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: 16,
+    gap: 12,
   },
 });
