@@ -34,9 +34,21 @@ export function useColorScheme() {
   return 'light';
 }
 
-// ThemeProvider funcional para web
+// ThemeProvider funcional para web con persistencia
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<ThemeType>('light');
+  const [theme, setThemeState] = useState<ThemeType>('light');
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('APP_THEME');
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      setThemeState(savedTheme);
+    }
+  }, []);
+
+  const setTheme = (newTheme: ThemeType) => {
+    setThemeState(newTheme);
+    localStorage.setItem('APP_THEME', newTheme);
+  };
 
   return React.createElement(ThemeContext.Provider, { value: { theme, setTheme } }, children);
 };

@@ -52,7 +52,7 @@ const commonIngredients = [
   'Cheese',
 ];
 
-const Ingredients = () => {
+const IngredientsScreen = () => {
   const router = useRouter();
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [searchText, setSearchText] = useState('');
@@ -484,4 +484,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Ingredients;
+export default IngredientsScreen;
