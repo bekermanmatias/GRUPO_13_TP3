@@ -89,7 +89,7 @@ export default function SearchScreen() {
       {loading ? (
         <LoadingSpinner />
       ) : recipes.length === 0 ? (
-        <Text style={[styles.noResults, { color: textColor }]}>No se encontraron recetas.</Text>
+        <Text style={[styles.noResults, { color: textColor }]}>No recipes found.</Text>
       ) : (
         <View style={styles.grid}>
           {recipes.map((recipe) => (

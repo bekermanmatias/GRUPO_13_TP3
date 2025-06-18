@@ -65,7 +65,7 @@ export default function RecipeDetail({ id }: RecipeDetailProps) {
           setRecipe(response.data.meals[0]);
         }
       } catch (error) {
-        console.error('Error al cargar la receta:', error);
+        console.error('Error loading recipe:', error);
       }
     };
 
@@ -145,7 +145,7 @@ export default function RecipeDetail({ id }: RecipeDetailProps) {
         }
       }
     } catch (error) {
-      console.error('Error al actualizar favorito:', error);
+      console.error('Error updating favorite:', error);
     }
   };
 
@@ -153,7 +153,7 @@ export default function RecipeDetail({ id }: RecipeDetailProps) {
     return <LoadingSpinner />;
   }
 
-  // Extraer ingredientes y medidas
+  // Extract ingredients and measurements
   const ingredients = [];
   for (let i = 1; i <= 20; i++) {
     const ingredient = recipe[`strIngredient${i}`];

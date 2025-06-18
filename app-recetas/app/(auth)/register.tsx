@@ -21,7 +21,7 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden');
+      setError('Passwords do not match');
       return;
     }
 
@@ -29,13 +29,13 @@ export default function RegisterScreen() {
       await createUserWithEmailAndPassword(auth, email, password);
       // El usuario será redirigido automáticamente por _layout.js al estar autenticado
     } catch (e) {
-      setError('No se pudo registrar. ¿Ya tenés una cuenta?');
+      setError('Could not register. Do you already have an account?');
     }
   };
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
-      <Text style={[styles.title, { color: textColor }]}>Registro</Text>
+      <Text style={[styles.title, { color: textColor }]}>Register</Text>
 
       <TextInput
         placeholder="Email"
@@ -52,7 +52,7 @@ export default function RegisterScreen() {
       />
 
       <TextInput
-        placeholder="Contraseña"
+        placeholder="Password"
         placeholderTextColor="#888"
         style={[styles.input, { 
           backgroundColor: Colors[theme].inputBackground,
@@ -65,7 +65,7 @@ export default function RegisterScreen() {
       />
 
       <TextInput
-        placeholder="Confirmar contraseña"
+        placeholder="Confirm password"
         placeholderTextColor="#888"
         style={[styles.input, { 
           backgroundColor: Colors[theme].inputBackground,
@@ -80,14 +80,14 @@ export default function RegisterScreen() {
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <TouchableOpacity style={[styles.button, { backgroundColor: buttonColor }]} onPress={handleRegister}>
-        <Text style={styles.buttonText}>Registrarse</Text>
+        <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.loginLink}
         onPress={() => router.push('/(auth)/login')}
       >
-        <Text style={[styles.loginText, { color: buttonColor }]}>¿Ya tenés cuenta? Iniciar sesión</Text>
+        <Text style={[styles.loginText, { color: buttonColor }]}>Already have an account? Login</Text>
       </TouchableOpacity>
     </View>
   );

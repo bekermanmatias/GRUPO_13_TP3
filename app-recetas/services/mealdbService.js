@@ -3,7 +3,7 @@
 const BASE_URL = 'https://www.themealdb.com/api/json/v1/1';
 
 export const mealdbService = {
-  // Buscar recetas por un ingrediente específico
+  // Search recipes by a specific ingredient
   searchByIngredient: async (ingredient) => {
     try {
       const response = await fetch(`${BASE_URL}/filter.php?i=${ingredient}`);
@@ -15,10 +15,10 @@ export const mealdbService = {
     }
   },
 
-  // Buscar recetas por múltiples ingredientes (implementación personalizada)
+  // Search recipes by multiple ingredients (custom implementation)
   searchByMultipleIngredients: async (ingredients) => {
     try {
-      // La API no soporta múltiples ingredientes directamente,
+      // The API doesn't support multiple ingredients directly
       // así que buscamos por cada uno y luego filtramos
       const allRecipes = [];
       const recipeCount = {};
@@ -33,7 +33,7 @@ export const mealdbService = {
         });
       }
       
-      // Ordenar por cantidad de ingredientes coincidentes
+      // Sort by number of matching ingredients
       const sortedRecipes = Object.values(recipeCount)
         .sort((a, b) => b.count - a.count)
         .map(item => ({
@@ -60,7 +60,7 @@ export const mealdbService = {
     }
   },
 
-  // Obtener lista de todos los ingredientes disponibles
+  // Get list of all available ingredients
   getAllIngredients: async () => {
     try {
       const response = await fetch(`${BASE_URL}/list.php?i=list`);

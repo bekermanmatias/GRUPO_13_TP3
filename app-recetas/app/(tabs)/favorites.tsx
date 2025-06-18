@@ -27,9 +27,9 @@ export default function FavoritesScreen() {
 
   return (
     <ScrollView style={[styles.container, { backgroundColor }]}>
-      <Text style={[styles.title, { color: textColor }]}>Mis favoritos</Text>
+      <Text style={[styles.title, { color: textColor }]}>My Favorites</Text>
       {favorites.length === 0 ? (
-        <Text style={[styles.emptyText, { color: textColor }]}>No tienes recetas favoritas aún</Text>
+        <Text style={[styles.emptyText, { color: textColor }]}>You don't have any favorite recipes yet</Text>
       ) : (
         <View style={styles.recipesContainer}>
           {favorites.map((recipe) => (

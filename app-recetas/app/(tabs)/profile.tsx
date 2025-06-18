@@ -29,7 +29,7 @@ export default function Profile() {
       await signOut(auth);
       router.replace('/(auth)/login');
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
+      console.error('Error signing out:', error);
     }
   };
 
@@ -46,7 +46,7 @@ export default function Profile() {
       <Text style={styles.email}>{user.email}</Text>
       
       <View style={styles.themeContainer}>
-        <Text style={[styles.themeText, { color: textColor }]}>Modo oscuro</Text>
+        <Text style={[styles.themeText, { color: textColor }]}>Dark mode</Text>
         <Switch
           value={theme === 'dark'}
           onValueChange={v => setTheme(v ? 'dark' : 'light')}
@@ -54,7 +54,7 @@ export default function Profile() {
       </View>
       
       <TouchableOpacity style={[styles.logoutButton, { backgroundColor: buttonColor }]} onPress={handleLogout}>
-        <Text style={styles.logoutText}>Cerrar sesión</Text>
+        <Text style={styles.logoutText}>Sign out</Text>
       </TouchableOpacity>
     </View>
   );

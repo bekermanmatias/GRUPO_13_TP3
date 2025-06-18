@@ -23,13 +23,13 @@ export default function LoginScreen() {
       await signInWithEmailAndPassword(auth, email, password);
       router.replace('/(tabs)');
     } catch (e) {
-      setError('Credenciales inválidas');
+      setError('Invalid credentials');
     }
   };
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
-      <Text style={[styles.title, { color: textColor }]}>Iniciar sesión</Text>
+      <Text style={[styles.title, { color: textColor }]}>Login</Text>
 
       <TextInput
         placeholder="Email"
@@ -46,7 +46,7 @@ export default function LoginScreen() {
       />
 
       <TextInput
-        placeholder="Contraseña"
+        placeholder="Password"
         placeholderTextColor="#888"
         style={[styles.input, { 
           backgroundColor: Colors[theme].inputBackground,
@@ -61,14 +61,14 @@ export default function LoginScreen() {
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <TouchableOpacity style={[styles.button, { backgroundColor: buttonColor }]} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Entrar</Text>
+        <Text style={styles.buttonText}>Sign In</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.registerLink}
         onPress={() => router.push('/(auth)/register')}
       >
-        <Text style={[styles.registerText, { color: buttonColor }]}>¿No tienes cuenta? Regístrate</Text>
+        <Text style={[styles.registerText, { color: buttonColor }]}>Don't have an account? Register</Text>
       </TouchableOpacity>
     </View>
   );

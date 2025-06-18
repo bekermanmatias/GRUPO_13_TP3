@@ -232,14 +232,14 @@ const IngredientsScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
-      <Text style={[styles.title, { color: textColor }]}>Ingredientes</Text>
+      <Text style={[styles.title, { color: textColor }]}>Ingredients</Text>
       
       {/* Búsqueda de ingredientes */}
       <View style={[styles.searchContainer, { backgroundColor: searchBgColor }]}>
         <Ionicons name="search-outline" size={20} color="#888" style={styles.searchIcon} />
         <TextInput
           style={[styles.searchInput, { backgroundColor: 'transparent', color: textColor }]}
-          placeholder="Buscar ingrediente..."
+          placeholder="Search ingredient..."
           placeholderTextColor="#aaa"
           value={searchText}
           onChangeText={setSearchText}
@@ -250,7 +250,7 @@ const IngredientsScreen = () => {
         {/* Mostrar ingredientes populares solo si no hay búsqueda */}
         {!searchText.trim() && (
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: textColor }]}>Ingredientes populares</Text>
+            <Text style={[styles.sectionTitle, { color: textColor }]}>Popular Ingredients</Text>
             <View style={styles.popularGrid}>
               {commonIngredients.map((ingredient) => (
                 <TouchableOpacity
@@ -278,7 +278,7 @@ const IngredientsScreen = () => {
         {/* Resultados de búsqueda */}
         {searchText.trim() !== '' && (
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: textColor }]}>Resultados de búsqueda</Text>
+            <Text style={[styles.sectionTitle, { color: textColor }]}>Search Results</Text>
             {loadingIngredients ? (
               <LoadingSpinner size="small" style={styles.loader} />
             ) : filteredIngredients.length > 0 ? (
@@ -310,13 +310,13 @@ const IngredientsScreen = () => {
                     onPress={loadMoreResults}
                   >
                     <Text style={styles.loadMoreText}>
-                      Ver más... ({getTotalMatches() - maxResults} restantes)
+                      View more... ({getTotalMatches() - maxResults} remaining)
                     </Text>
                   </TouchableOpacity>
                 )}
               </>
             ) : (
-              <Text style={[styles.noResults, { color: textColor }]}>No se encontraron ingredientes</Text>
+              <Text style={[styles.noResults, { color: textColor }]}>No ingredients found</Text>
             )}
           </View>
         )}
@@ -325,7 +325,7 @@ const IngredientsScreen = () => {
         {selectedIngredient && (
           <View style={[styles.section, styles.recipesSection]}>
             <Text style={[styles.sectionTitle, { color: textColor }]}>
-              Recetas con {selectedIngredient}
+              Recipes with {selectedIngredient}
             </Text>
             {loading ? (
               <LoadingSpinner size="large" style={styles.loader} />
@@ -336,7 +336,7 @@ const IngredientsScreen = () => {
                 ))}
               </View>
             ) : (
-              <Text style={[styles.noResults, { color: textColor }]}>No se encontraron recetas</Text>
+              <Text style={[styles.noResults, { color: textColor }]}>No recipes found</Text>
             )}
           </View>
         )}
