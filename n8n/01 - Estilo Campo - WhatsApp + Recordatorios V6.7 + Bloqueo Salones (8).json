@@ -11,10 +11,10 @@
       "type": "n8n-nodes-base.whatsAppTrigger",
       "typeVersion": 1,
       "position": [
-        176,
-        2304
+        8608,
+        6128
       ],
-      "id": "81f678e7-7779-4747-9376-f837917bba6b",
+      "id": "88cd51fb-2f92-41a7-96fa-c5c7310c8bff",
       "name": "WhatsApp Trigger",
       "webhookId": "2748fdbd-33a5-43f0-8207-37f779b3d0c0",
       "credentials": {
@@ -62,10 +62,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        416,
-        2304
+        8848,
+        6128
       ],
-      "id": "79536a35-5756-4f8a-bfb7-c2836696ac78",
+      "id": "130b4a06-6ccf-44c2-a979-755706c22abb",
       "name": "If1"
     },
     {
@@ -145,10 +145,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1392,
-        1936
+        9824,
+        5760
       ],
-      "id": "d1680c3f-ff00-4cd6-81e3-2956159f57ad",
+      "id": "1af3de03-4056-4856-bea2-8d98b73d12b2",
       "name": "Edit Fields"
     },
     {
@@ -161,10 +161,10 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        1632,
-        1936
+        10064,
+        5760
       ],
-      "id": "ac1427eb-842a-4196-93a8-68a9c814b44b",
+      "id": "e860c8d7-a382-4a6c-862a-f2bb7a566f6f",
       "name": "Mensaje Emisor",
       "credentials": {
         "mongoDb": {
@@ -232,10 +232,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1872,
-        1936
+        10304,
+        5760
       ],
-      "id": "91f7be9d-40ed-4ee1-b471-4c6b8fb26a3a",
+      "id": "52006015-855c-4dd5-ae83-9257e87add7d",
       "name": "HTTP Request4",
       "onError": "continueRegularOutput",
       "notes": "Persiste/notifica el mensaje entrante en PupuIA con el messageId original de WhatsApp, contactName y timestamp original. Debe completarse antes de iniciar el buffer/Core."
@@ -270,10 +270,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2688,
-        1680
+        11120,
+        5504
       ],
-      "id": "bedf3fb1-0e4b-4e11-bb24-f5ac87314c70",
+      "id": "7496f6ab-8b8c-43d2-9971-1bfa93ee8221",
       "name": "HTTP Request"
     },
     {
@@ -304,10 +304,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        3216,
-        1632
+        11648,
+        5456
       ],
-      "id": "4e13cf23-a100-40f7-9970-cb23dc28ad53",
+      "id": "9fa09b35-3cb2-4450-be27-50c91a41d4cc",
       "name": "If"
     },
     {
@@ -399,10 +399,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        5632,
-        1664
+        14064,
+        5488
       ],
-      "id": "e3f3d67a-46fc-49f8-a30b-76b3c0ee5cf0",
+      "id": "723aa258-7c19-4a00-8fef-3583a37868ea",
       "name": "Preparar Entrada Foodie Core",
       "notes": "Entrada específica de Estilo Campo. Foodie define Gift Cards, horarios, excepciones, bookingPriority y bloqueos temporales de salones."
     },
@@ -429,10 +429,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        5952,
-        1600
+        14384,
+        5424
       ],
-      "id": "53d7bd5e-5e9b-4c7f-b756-c68afb0bfc5c",
+      "id": "394e058d-6358-43b9-827d-81cd4ac40019",
       "name": "Ejecutar Foodie AI Core",
       "notes": "Ejecuta el Core V6.7 con resolución por bloqueos + bookingPriority."
     },
@@ -447,10 +447,10 @@
       "type": "n8n-nodes-base.whatsApp",
       "typeVersion": 1,
       "position": [
-        7744,
-        1568
+        16176,
+        5392
       ],
-      "id": "71435ebc-c12d-42b6-b4dc-323d169c8087",
+      "id": "e7515596-79d3-43b8-9d3d-256244c80cf8",
       "name": "Enviar WhatsApp - Estilo Campo",
       "webhookId": "ea3fbad9-1c07-46e6-bac7-075c033cb2e9",
       "credentials": {
@@ -519,10 +519,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        7984,
-        1568
+        16416,
+        5392
       ],
-      "id": "17042fe6-936f-4b64-8a30-664c9847b3c0",
+      "id": "e37a152c-27aa-43ca-8d04-24b45e087dd5",
       "name": "Edit Fields1"
     },
     {
@@ -535,10 +535,10 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        8224,
-        1568
+        16656,
+        5392
       ],
-      "id": "17bcd31a-77e7-4fe6-bb8e-e6b2cd40d7fa",
+      "id": "f4ba2227-0be4-49a4-97f0-3121b47e15e6",
       "name": "Mensaje Receptor",
       "credentials": {
         "mongoDb": {
@@ -602,10 +602,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8480,
-        1568
+        16912,
+        5392
       ],
-      "id": "bcf9a938-40db-4ed6-b9f0-ecd98b9f2b7a",
+      "id": "0a74cd6a-3167-4fec-bd11-f15cd3dafb1f",
       "name": "HTTP Request5",
       "onError": "continueRegularOutput",
       "notes": "Notifica/persiste la respuesta del bot con su messageId real de WhatsApp. El mensaje entrante ya fue publicado antes de iniciar el Core."
@@ -645,10 +645,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1056,
-        3200
+        9488,
+        7024
       ],
-      "id": "bbff1b4c-4a28-4c84-ab3a-021a2401d8d1",
+      "id": "56a28ffe-b4ce-4b41-8df8-1fa62222ea36",
       "name": "Config Recordatorios",
       "notes": "Usar la misma API key específica de Estilo Campo que en la rama de WhatsApp."
     },
@@ -676,10 +676,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1280,
-        3200
+        9712,
+        7024
       ],
-      "id": "19e8e54a-9964-4095-88f1-6a8293c46d90",
+      "id": "87998548-42ef-484d-af50-88545c553442",
       "name": "Contexto Foodie Recordatorios"
     },
     {
@@ -694,10 +694,10 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        1504,
-        3200
+        9936,
+        7024
       ],
-      "id": "10caa070-164d-4853-b3de-f53b86445065",
+      "id": "36c57dc3-a536-45f9-b8ec-df4c6feb76d6",
       "name": "Buscar recordatorios pendientes",
       "credentials": {
         "mongoDb": {
@@ -714,10 +714,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1712,
-        3200
+        10144,
+        7024
       ],
-      "id": "ed56359b-b0cb-4d9d-8ee7-1ca8df4ece48",
+      "id": "9216e4c3-f49f-4d53-861e-2ade4d2a869d",
       "name": "Evaluar recordatorio",
       "notes": "Corregido para Run Once for Each Item: devuelve un objeto item, no un array."
     },
@@ -749,10 +749,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1936,
-        3120
+        10368,
+        6944
       ],
-      "id": "4d6ed284-ba63-46b7-9057-5d4d685d01f3",
+      "id": "3b445f79-641a-4d43-813e-2cd0f6730963",
       "name": "Enviar ahora?"
     },
     {
@@ -766,10 +766,10 @@
       "type": "n8n-nodes-base.whatsApp",
       "typeVersion": 1,
       "position": [
-        2160,
-        3040
+        10592,
+        6864
       ],
-      "id": "dc78328f-3e61-4615-984b-a40eba96c563",
+      "id": "7b41266a-3531-4518-9b9c-891c6cf9dd5b",
       "name": "Enviar recordatorio WhatsApp",
       "webhookId": "7cdf4da6-76f0-4c29-ab6c-6d2f3dfac8a6",
       "credentials": {
@@ -820,10 +820,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2384,
-        3040
+        10816,
+        6864
       ],
-      "id": "98c3edab-8390-48d1-a279-e8d459e153d4",
+      "id": "80023897-a97e-427f-a614-cfbdcc136df9",
       "name": "Marcar enviado"
     },
     {
@@ -837,10 +837,10 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        2592,
-        3040
+        11024,
+        6864
       ],
-      "id": "5b8c9fa3-51b7-4b6d-b6ba-8791289be444",
+      "id": "e936196e-082e-41fe-86ef-3a0e1de04345",
       "name": "Guardar enviado",
       "credentials": {
         "mongoDb": {
@@ -877,10 +877,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2416,
-        3328
+        10848,
+        7152
       ],
-      "id": "176e23d0-cb54-4d38-b864-8cac8a452464",
+      "id": "44e9d25a-f8f9-48fd-b7bb-ed89e81c63e5",
       "name": "Actualizar estado?1"
     },
     {
@@ -894,10 +894,10 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        2928,
-        3248
+        11360,
+        7072
       ],
-      "id": "f47f81a6-03d3-4be8-9071-295936c0d767",
+      "id": "fc8ba44c-4d0b-44da-affd-11ed5af29192",
       "name": "Actualizar recordatorio1",
       "credentials": {
         "mongoDb": {
@@ -934,10 +934,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        6640,
-        1600
+        15072,
+        5424
       ],
-      "id": "e63ce5aa-5f3d-4231-a43a-c8963589c51f",
+      "id": "b858e264-35c5-476a-9f02-17e4e176fe3c",
       "name": "¿Es consulta de Evento?"
     },
     {
@@ -1065,10 +1065,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        6880,
-        1488
+        15312,
+        5312
       ],
-      "id": "83f3c004-fda8-4851-9a88-5488549ddccc",
+      "id": "0dee03e7-1bf4-4b16-97f2-c9cccbaf069e",
       "name": "Preparar lead Evento",
       "notes": "Normaliza la intención y los datos recopilados del evento. La etiqueta visual del chat se aplica en PupuIA mediante POST /api/n8n/route-chat."
     },
@@ -1084,10 +1084,10 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        7120,
-        1488
+        15552,
+        5312
       ],
-      "id": "2196793a-1ef8-4909-a675-8be8254f67ec",
+      "id": "3a330723-2d3a-4fe7-8643-de4dd6231e5d",
       "name": "Guardar lead Evento",
       "credentials": {
         "mongoDb": {
@@ -1126,10 +1126,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        7120,
-        1712
+        15552,
+        5536
       ],
-      "id": "492dabba-d3ee-420b-bf87-46ce1c0c7db2",
+      "id": "fd9d6a47-0cb9-4059-ba87-cd997664a16f",
       "name": "¿Derivar a humano?"
     },
     {
@@ -1163,10 +1163,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        7456,
-        1792
+        15888,
+        5616
       ],
-      "id": "3d7b4ae4-7d94-4341-9acf-dd882cd7c653",
+      "id": "c4fa9d41-f653-4042-90ae-042c7756aa5e",
       "name": "Marcar atención humana",
       "onError": "continueRegularOutput",
       "notes": "Usa el endpoint PupuIA existente para pasar el chat a atención humana cuando handoffRequested=true. Esto NO asigna específicamente al usuario/equipo EVENTOS; targetTeam es metadata hasta que PupuIA implemente asignación específica."
@@ -1199,10 +1199,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        6192,
-        1600
+        14624,
+        5424
       ],
-      "id": "70553da9-79b8-4b59-acd7-283795f44c5d",
+      "id": "b630e40a-e057-4dd0-8c0f-600287dcbe07",
       "name": "¿Hay etiqueta de routing?",
       "notes": "Si el Core devuelve una etiqueta, la aplica en PupuIA antes de continuar. Para intent=event usa Evento como fallback."
     },
@@ -1248,10 +1248,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        6416,
-        1488
+        14848,
+        5312
       ],
-      "id": "941afc11-2889-4085-8621-722bde167b3b",
+      "id": "fd279fbb-b56f-4abc-975c-6dfa6fe62ae0",
       "name": "Aplicar etiqueta en PupuIA",
       "onError": "continueRegularOutput",
       "notes": "POST /api/n8n/route-chat. Endpoint idempotente: aplica la etiqueta al chat sin cambiar bot/humano, sin asignar asesores y sin generar alertas."
@@ -1284,10 +1284,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        576,
-        1744
+        9008,
+        5568
       ],
-      "id": "78ecd089-7a67-4374-9e40-f9c7d7f5db17",
+      "id": "ae7fcdd7-8271-40aa-b85c-f91d31af74b4",
       "name": "¿Es audio?"
     },
     {
@@ -1328,10 +1328,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        816,
-        1744
+        9248,
+        5568
       ],
-      "id": "dd3a99e1-3a29-4f34-a0b6-44a7a7522b15",
+      "id": "37bb209b-29a5-47f3-abf2-922fb2929e35",
       "name": "¿Es imagen o PDF?"
     },
     {
@@ -1362,10 +1362,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1056,
-        1904
+        9488,
+        5728
       ],
-      "id": "343bc6d5-20af-4401-a2a8-578ef2f5ff3f",
+      "id": "c7715ceb-acd1-4052-9b1f-9492084f701f",
       "name": "¿Es texto?"
     },
     {
@@ -1377,10 +1377,10 @@
       "type": "n8n-nodes-base.whatsApp",
       "typeVersion": 1,
       "position": [
-        1056,
-        1488
+        9488,
+        5312
       ],
-      "id": "a4f21a71-1a58-4ea0-8c64-191b91893d3b",
+      "id": "001b961d-9f5a-4962-b3ea-59c2ac92b632",
       "name": "Obtener URL adjunto WhatsApp",
       "webhookId": "5a249d5c-d050-4f6c-b25d-c328af144a37",
       "credentials": {
@@ -1406,10 +1406,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1296,
-        1488
+        9728,
+        5312
       ],
-      "id": "c7bc0cf0-a31a-4a6f-b338-74106f6c6cb3",
+      "id": "b762a979-b2b6-4e60-90e1-df1df0efb1c2",
       "name": "Descargar adjunto WhatsApp",
       "credentials": {
         "whatsAppApi": {
@@ -1426,10 +1426,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1536,
-        1488
+        9968,
+        5312
       ],
-      "id": "ea8e7073-b664-4d33-802e-563a13ab1200",
+      "id": "9105c12c-52af-443a-b960-7c8a49b2c378",
       "name": "Preparar adjunto para PupuIA",
       "notes": "No analiza el archivo ni lo convierte a base64. Conserva el binario y prepara metadata para subirlo a PupuIA; solo el caption, si existe, puede seguir al Core."
     },
@@ -1476,10 +1476,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1776,
-        1488
+        10208,
+        5312
       ],
-      "id": "48da624c-b1ed-4b18-83a3-4353dd110f52",
+      "id": "ecdc1512-80f2-412f-ad83-7a196b09c00d",
       "name": "Subir adjunto a PupuIA",
       "notes": "POST multipart /api/n8n/upload-media. Sube el binario descargado de WhatsApp a GridFS en PupuIA usando el mismo messageId de WhatsApp para idempotencia."
     },
@@ -1506,10 +1506,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2016,
-        1488
+        10448,
+        5312
       ],
-      "id": "648a248e-abf2-4d20-ba8e-0b56f3bb3c8f",
+      "id": "85c647c7-68ca-423e-b727-b426ae054b1f",
       "name": "Notificar adjunto a PupuIA",
       "onError": "continueRegularOutput",
       "notes": "Notifica a PupuIA usando el contrato nuevo: mismo messageId de WhatsApp + mediaUrl/mediaType/fileName/mimeType devueltos por upload-media. PupuIA persiste el mensaje y lo publica por SSE."
@@ -1542,10 +1542,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2256,
-        1488
+        10688,
+        5312
       ],
-      "id": "5b790088-e421-4bcd-bfdf-c0bc64efcea0",
+      "id": "45abad4a-3497-4c5e-9b0b-41a53a4386b9",
       "name": "¿Adjunto tiene caption?"
     },
     {
@@ -1559,10 +1559,10 @@
       "type": "n8n-nodes-base.whatsApp",
       "typeVersion": 1.1,
       "position": [
-        816,
-        1200
+        9248,
+        5024
       ],
-      "id": "5bc117bf-9e32-4b40-9d4d-0b4824530d24",
+      "id": "0f5a9b61-b8a1-4693-bb46-9c34f0b05b49",
       "name": "Enviar WhatsApp - Audio no soportado",
       "webhookId": "017cc58b-aecb-496a-a23e-ac7681025564",
       "credentials": {
@@ -1637,10 +1637,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1056,
-        1200
+        9488,
+        5024
       ],
-      "id": "8f6b52d7-cc0d-48e1-9812-7d7e4add3dc1",
+      "id": "a62d8fc0-d528-403a-90d3-37f47d6a3021",
       "name": "Preparar log audio no soportado"
     },
     {
@@ -1653,10 +1653,10 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        1296,
-        1200
+        9728,
+        5024
       ],
-      "id": "c90655f4-713a-4eed-bfa2-de976cc1dc99",
+      "id": "edcaad79-0d01-4140-9d70-e28aba227ba1",
       "name": "Guardar respuesta audio no soportado",
       "credentials": {
         "mongoDb": {
@@ -1721,10 +1721,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1536,
-        1200
+        9968,
+        5024
       ],
-      "id": "b81c6475-05da-4794-a2ea-2cbac680a671",
+      "id": "0e1c77f4-7a3f-4587-81ce-89574236fdd4",
       "name": "Notificar respuesta audio a PupuIA",
       "onError": "continueRegularOutput"
     },
@@ -1736,10 +1736,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3424,
-        1696
+        11856,
+        5520
       ],
-      "id": "295c31d4-999a-41b8-bcd1-a5e121e73f99",
+      "id": "c3f21ced-8992-4335-b1a8-e390dfedd0b9",
       "name": "Preparar buffer mensajes",
       "notes": "Debounce por chat. Solo prepara metadata; no altera el contenido ni la lógica del Core."
     },
@@ -1755,10 +1755,10 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        3904,
-        1696
+        12336,
+        5520
       ],
-      "id": "d013e724-aca5-4710-b89d-80f9cb92f094",
+      "id": "57cd7c81-487b-4dcf-93f2-5cac740fa4e3",
       "name": "Asegurar estado buffer",
       "credentials": {
         "mongoDb": {
@@ -1767,21 +1767,6 @@
         }
       },
       "notes": "Crea el estado por chat si no existe y conserva el último corte procesado."
-    },
-    {
-      "parameters": {
-        "amount": 4
-      },
-      "type": "n8n-nodes-base.wait",
-      "typeVersion": 1.1,
-      "position": [
-        4144,
-        1696
-      ],
-      "id": "84c55ef1-fb0d-4a7b-8484-0fc7d4d5a1e5",
-      "name": "Buffer 4 segundos",
-      "webhookId": "1f766119-3c11-41b5-8da8-94242b2997c8",
-      "notes": "Espera 4 segundos. Luego solo continúa la ejecución del último mensaje elegible del chat."
     },
     {
       "parameters": {
@@ -1795,10 +1780,10 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        4384,
-        1696
+        12816,
+        5520
       ],
-      "id": "0b2ff80e-90c7-446d-a3c1-16d4a8cd2033",
+      "id": "178412c3-1582-44a2-9cc7-1771a2fe848f",
       "name": "Buscar último mensaje elegible",
       "credentials": {
         "mongoDb": {
@@ -1836,12 +1821,12 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        4624,
-        1696
+        13056,
+        5520
       ],
-      "id": "0c281044-1553-41d5-9587-bf57b1ed38bf",
+      "id": "1fd2896e-9473-4df3-bfd0-eac3c5dd6965",
       "name": "¿Sigue siendo el último mensaje?",
-      "notes": "Si llegó otro mensaje durante los 4 segundos, esta ejecución termina sin responder."
+      "notes": "Si llegó otro mensaje elegible del mismo chat durante los 20 segundos, esta ejecución termina sin responder. Solo continúa la del mensaje más reciente."
     },
     {
       "parameters": {
@@ -1854,10 +1839,10 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        4864,
-        1696
+        13296,
+        5520
       ],
-      "id": "658db992-d6c5-4a07-9903-7a45a1907d3e",
+      "id": "75995711-0a07-447d-96cd-9272ab87862f",
       "name": "Leer estado buffer",
       "credentials": {
         "mongoDb": {
@@ -1878,10 +1863,10 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        5104,
-        1696
+        13536,
+        5520
       ],
-      "id": "ec701591-5f15-4711-aeee-e69b38832b17",
+      "id": "772106dd-497d-4fb0-8655-000a29cc5186",
       "name": "Buscar mensajes del buffer",
       "credentials": {
         "mongoDb": {
@@ -1898,10 +1883,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        5344,
-        1696
+        13776,
+        5520
       ],
-      "id": "90e22bfe-2c42-4b26-b685-4c0b5a2bbaee",
+      "id": "79eeb766-4fbf-4380-b6d0-f55d734e930f",
       "name": "Unir mensajes del buffer",
       "notes": "Une el burst desde la cola propia del debounce en un único texto para Foodie. No interpreta imágenes/PDF."
     },
@@ -1916,10 +1901,10 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        5488,
-        1968
+        13920,
+        5792
       ],
-      "id": "c3ff12e6-b904-4ad1-b204-f2b2aa8b626b",
+      "id": "88240961-6f8a-47f1-aebc-dba2d01db851",
       "name": "Marcar buffer procesado",
       "credentials": {
         "mongoDb": {
@@ -1941,10 +1926,10 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        3664,
-        1696
+        12096,
+        5520
       ],
-      "id": "1d7c4078-f8c2-45d2-a561-e7e949abf440",
+      "id": "35672671-5e0f-4494-9abd-99d794db33c0",
       "name": "Guardar mensaje en buffer",
       "credentials": {
         "mongoDb": {
@@ -1953,6 +1938,165 @@
         }
       },
       "notes": "Guarda cada texto/caption elegible en una cola propia del debounce. No depende de la colección messages ni de la persistencia de PupuIA."
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        12576,
+        5520
+      ],
+      "id": "29492949-d5fc-49d2-bc61-60b763558b6c",
+      "name": "Buffer 30 segundos",
+      "webhookId": "1f766119-3c11-41b5-8da8-94242b2997c8",
+      "notes": "Espera 20 segundos desde este mensaje. Si durante esa ventana llega otro mensaje elegible del mismo chat, esta ejecución no continúa; solamente la ejecución correspondiente al último mensaje agrupa el bloque y llega al Core."
+    },
+    {
+      "parameters": {
+        "jsCode": "const proofRule = `# COMPROBANTES DE SEÑA\n\nSi el cliente indica que hizo una transferencia o envía un comprobante, nunca confirmes el pago ni la reserva automáticamente. Si corresponde acusar recibo, indicá únicamente que queda pendiente de validación por el equipo. El estado real de la seña sólo puede ser validado por Foodie.`;\nreturn [{ json: { ...$json, restaurantInstructions: `${$json.restaurantInstructions}\\n\\n${proofRule}` } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [14288, 5488],
+      "id": "4c5e1ce2-08ce-4785-a24b-75dc21f37e6a",
+      "name": "Agregar regla de comprobantes al Core"
+    },
+    {
+      "parameters": {
+        "url": "=https://resto.pupuia.com/v1/external/deposits/proof-request?phone={{ encodeURIComponent($('Preparar adjunto para PupuIA').first().json.phoneNumber) }}",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "x-api-key", "value": "={{ $env.FOODIE_API_KEY }}" }] },
+        "options": { "response": { "response": { "neverError": true, "responseFormat": "json" } } }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [10208, 5584],
+      "id": "c1b8b011-5d0e-4fa1-a32e-385e3292a901",
+      "name": "Consultar solicitud de comprobante",
+      "notes": "Sólo consulta una solicitud activa para el teléfono que envió el adjunto. No clasifica CVs, facturas ni imágenes comunes como comprobantes."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+          "conditions": [{ "leftValue": "={{ $json.active === true }}", "rightValue": true, "operator": { "type": "boolean", "operation": "true", "singleValue": true } }],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [10448, 5584],
+      "id": "568bcaea-bd4f-43dc-8601-99bdfb765a07",
+      "name": "¿Hay solicitud activa de comprobante?"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const prepared = $('Preparar adjunto para PupuIA').first();\nconst file = prepared.binary?.data || {};\nconst rawSize = file.fileSize ?? 0;\nconst units = { b: 1, kb: 1024, mb: 1024 * 1024, gb: 1024 * 1024 * 1024 };\nconst match = String(rawSize).trim().toLowerCase().match(/^([\\d.]+)\\s*(b|kb|mb|gb)?$/);\nconst size = match ? Math.floor(Number(match[1]) * (units[match[2] || 'b'] || 1)) : Number(rawSize);\nreturn { json: { ...prepared.json, requestId: $json.requestId, size }, binary: prepared.binary };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [10688, 5584],
+      "id": "9e1a9aa9-34b3-4c39-b21a-c0b2cf0fa8fa",
+      "name": "Preparar comprobante para Foodie"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://resto.pupuia.com/v1/external/deposits/proof-requests/{{ $json.requestId }}/upload-url",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "x-api-key", "value": "={{ $env.FOODIE_API_KEY }}" }] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { fileName: $json.fileName, mimeType: $json.mimeType, size: $json.size } }}"
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [10928, 5504],
+      "id": "f6382f3d-762a-4e90-bb94-7a061f7fd523",
+      "name": "Solicitar URL prefirmada de comprobante"
+    },
+    {
+      "parameters": { "mode": "combine", "combineBy": "combineByPosition", "options": {} },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [11168, 5584],
+      "id": "27a38c4a-6c3e-4ba3-b964-f0dfde34ae2b",
+      "name": "Unir binario y URL prefirmada"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $json.uploadUrl }}",
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": { "timeout": 30000 }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [11408, 5584],
+      "id": "efaa626b-a424-440e-9cbd-8e22a38c944e",
+      "name": "Subir comprobante privado a R2",
+      "notes": "Usa exclusivamente la URL prefirmada emitida por Foodie; n8n no recibe credenciales R2."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://resto.pupuia.com/v1/external/deposits/proof-requests/{{ $('Preparar comprobante para Foodie').first().json.requestId }}/confirm-upload",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "x-api-key", "value": "={{ $env.FOODIE_API_KEY }}" }] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { objectKey: $('Solicitar URL prefirmada de comprobante').first().json.objectKey, fileName: $('Preparar comprobante para Foodie').first().json.fileName, mimeType: $('Preparar comprobante para Foodie').first().json.mimeType, size: $('Preparar comprobante para Foodie').first().json.size, messageId: $('Preparar comprobante para Foodie').first().json.messageId, caption: $('Preparar comprobante para Foodie').first().json.content } }}"
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [11648, 5584],
+      "id": "2a0590d7-c635-40a9-9b6e-eecbd00b3a91",
+      "name": "Confirmar comprobante recibido en Foodie"
+    },
+    {
+      "parameters": {
+        "url": "=https://resto.pupuia.com/v1/external/reservations/reminder-eligibility?reservationCode={{ encodeURIComponent($json.reservationCode || '') }}",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "x-api-key", "value": "={{ $env.FOODIE_API_KEY }}" }] },
+        "options": { "response": { "response": { "neverError": true, "responseFormat": "json" } } }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [5472, 3568],
+      "id": "a7b4107f-35d2-4b1f-aef5-027ba08f4678",
+      "name": "Verificar elegibilidad de recordatorio"
+    },
+    {
+      "parameters": {
+        "jsCode": "const reminder = $('Evaluar recordatorio').item.json;\nreturn [{ json: { ...reminder, eligible: $json.eligible === true } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [5584, 3568],
+      "id": "26ab4acf-8f32-4ed5-a15b-cfdf8d20e0bc",
+      "name": "Restaurar datos de recordatorio"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+          "conditions": [{ "leftValue": "={{ $json.eligible === true }}", "rightValue": true, "operator": { "type": "boolean", "operation": "true", "singleValue": true } }],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [5712, 3568],
+      "id": "83a431bb-ef22-4aac-b3f7-89dbf4316ccb",
+      "name": "¿Reserva elegible para recordatorio?"
     }
   ],
   "pinData": {},
@@ -2024,6 +2168,17 @@
       ]
     },
     "Preparar Entrada Foodie Core": {
+      "main": [
+        [
+          {
+            "node": "Agregar regla de comprobantes al Core",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar regla de comprobantes al Core": {
       "main": [
         [
           {
@@ -2126,7 +2281,7 @@
       "main": [
         [
           {
-            "node": "Enviar recordatorio WhatsApp",
+            "node": "Verificar elegibilidad de recordatorio",
             "type": "main",
             "index": 0
           }
@@ -2347,6 +2502,11 @@
             "node": "Subir adjunto a PupuIA",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Consultar solicitud de comprobante",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -2421,18 +2581,7 @@
       "main": [
         [
           {
-            "node": "Buffer 4 segundos",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Buffer 4 segundos": {
-      "main": [
-        [
-          {
-            "node": "Buscar último mensaje elegible",
+            "node": "Buffer 30 segundos",
             "type": "main",
             "index": 0
           }
@@ -2537,6 +2686,129 @@
           }
         ]
       ]
+    },
+    "Buffer 30 segundos": {
+      "main": [
+        [
+          {
+            "node": "Buscar último mensaje elegible",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar solicitud de comprobante": {
+      "main": [
+        [
+          {
+            "node": "¿Hay solicitud activa de comprobante?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hay solicitud activa de comprobante?": {
+      "main": [
+        [
+          {
+            "node": "Preparar comprobante para Foodie",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Preparar comprobante para Foodie": {
+      "main": [
+        [
+          {
+            "node": "Solicitar URL prefirmada de comprobante",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Unir binario y URL prefirmada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Solicitar URL prefirmada de comprobante": {
+      "main": [
+        [
+          {
+            "node": "Unir binario y URL prefirmada",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Unir binario y URL prefirmada": {
+      "main": [
+        [
+          {
+            "node": "Subir comprobante privado a R2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subir comprobante privado a R2": {
+      "main": [
+        [
+          {
+            "node": "Confirmar comprobante recibido en Foodie",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar elegibilidad de recordatorio": {
+      "main": [
+        [
+          {
+            "node": "Restaurar datos de recordatorio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restaurar datos de recordatorio": {
+      "main": [
+        [
+          {
+            "node": "¿Reserva elegible para recordatorio?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Reserva elegible para recordatorio?": {
+      "main": [
+        [
+          {
+            "node": "Enviar recordatorio WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Actualizar estado?1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -2544,7 +2816,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "aa7c7128-1764-4fae-9ff4-973367554b9d",
+  "versionId": "01ea72c7-50bd-4823-8eda-cb90a5f0865a",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "9b8fad3009628f92f02fda381e33ae1327dd73b755b954142faaf6498a12964a"
