@@ -3601,6 +3601,163 @@
       "id": "55da253e-c39d-4a46-95d7-ddce7170120e",
       "name": "Responder webhook envío gift card",
       "notes": "Devuelve { sent, reason } a Foodie."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fa4825bc-88f4-4437-b814-d2dbb61e7db8",
+              "name": "clientId",
+              "value": "={{ $('Preparar envío Gift Card').first().json.clientId }}",
+              "type": "string"
+            },
+            {
+              "id": "20cee533-de40-4fc6-a543-ac8e59e16257",
+              "name": "chatId",
+              "value": "={{ $('Preparar envío Gift Card').first().json.phoneNumber }}",
+              "type": "string"
+            },
+            {
+              "id": "f32f13a5-6c4b-4fda-84b7-69aa0f60ba72",
+              "name": "phoneNumber",
+              "value": "={{ $('Preparar envío Gift Card').first().json.phoneNumber }}",
+              "type": "string"
+            },
+            {
+              "id": "9c1fe4e7-3ff6-441a-aea8-c9ae6c8854f8",
+              "name": "content",
+              "value": "={{ $('Preparar envío Gift Card').first().json.caption || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "bf746692-9e57-4f4b-9c87-a162a40900e9",
+              "name": "messageId",
+              "value": "={{ 'giftcard-' + String($('Preparar envío Gift Card').first().json.orderId || '') + '-' + Date.now() }}",
+              "type": "string"
+            },
+            {
+              "id": "db846d37-ae90-4af0-9f1a-dbfc54c0470a",
+              "name": "sender",
+              "value": "bot",
+              "type": "string"
+            },
+            {
+              "id": "6b17d0e7-235b-4af8-8503-dac6bedb91d2",
+              "name": "status",
+              "value": "sent",
+              "type": "string"
+            },
+            {
+              "id": "8bca6734-9ff8-4c3f-9e00-c6bf9a6f4501",
+              "name": "timestamp",
+              "value": "={{ $now.toUTC() }}",
+              "type": "string"
+            },
+            {
+              "id": "59618f82-7c3e-4769-b761-a00459514e35",
+              "name": "sentBy",
+              "value": "manual",
+              "type": "string"
+            },
+            {
+              "id": "0ae44725-c101-414b-9c5f-7e74ff640b99",
+              "name": "paymentRequired",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "bfa760ee-6774-4d09-a048-6e2a495f0cc8",
+              "name": "paymentPending",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "6c6df202-8337-45f3-9ecc-171369274540",
+              "name": "reservationCode",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "43d142a2-995f-4a26-9c81-27c95a08e2bf",
+              "name": "paymentType",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "e68e108e-4fa7-4a8c-ada2-52458e8584a8",
+              "name": "paymentReference",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "13437c13-a862-43ba-ac45-a812251601b3",
+              "name": "paymentStateKnown",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "8f005918-c864-4361-b16f-de7756733e93",
+              "name": "mediaUrl",
+              "value": "={{ $('Preparar envío Gift Card').first().json.imageUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "b54aab8a-a7df-47ff-be45-e240c0218d34",
+              "name": "mediaType",
+              "value": "image",
+              "type": "string"
+            },
+            {
+              "id": "7a4d1f60-b147-4644-87ed-d5080d4e3b35",
+              "name": "fileName",
+              "value": "={{ (() => { const url = String($('Preparar envío Gift Card').first().json.imageUrl || ''); if (!url) return ''; const clean = url.split('?')[0].split('#')[0]; const parts = clean.split('/'); return parts[parts.length - 1] || ''; })() }}",
+              "type": "string"
+            },
+            {
+              "id": "5176f77e-0e22-4b2b-a4ae-25769277c1c8",
+              "name": "mimeType",
+              "value": "={{ (() => { const url = String($('Preparar envío Gift Card').first().json.imageUrl || '').toLowerCase(); if (!url) return ''; if (url.endsWith('.png')) return 'image/png'; if (url.endsWith('.jpg') || url.endsWith('.jpeg')) return 'image/jpeg'; if (url.endsWith('.webp')) return 'image/webp'; return 'image/png'; })() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        47440,
+        16900
+      ],
+      "id": "3d6e3824-4275-475b-aae1-4aed709834a9",
+      "name": "Preparar mensaje Gift Card",
+      "notes": "Arma el mensaje saliente (imagen + caption) para guardarlo en Mongo igual que el flujo automatico, asi la Gift Card enviada a mano aparece en el chat de la app."
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "messages",
+        "fields": "clientId,chatId,phoneNumber,content,messageId,sender,status,timestamp,sentBy,paymentRequired,paymentPending,reservationCode,paymentType,paymentReference,paymentStateKnown,mediaUrl,mediaType,fileName,mimeType",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        47600,
+        16900
+      ],
+      "id": "c5329367-192b-4208-b84c-b44643d230da",
+      "name": "Guardar mensaje Gift Card enviada",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "mongoDb": {
+          "id": "iuRmHDlEDpZ6osNw",
+          "name": "MONGO HOSTINGER"
+        }
+      },
+      "notes": "Persiste la Gift Card enviada a mano en la coleccion messages para que se vea en el chat de Foodie/PupuIA."
     }
   ],
   "pinData": {},
@@ -4714,7 +4871,7 @@
       "main": [
         [
           {
-            "node": "Responder envío exitoso",
+            "node": "Preparar mensaje Gift Card",
             "type": "main",
             "index": 0
           }
@@ -4737,6 +4894,28 @@
         [
           {
             "node": "Responder webhook envío gift card",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar mensaje Gift Card": {
+      "main": [
+        [
+          {
+            "node": "Guardar mensaje Gift Card enviada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar mensaje Gift Card enviada": {
+      "main": [
+        [
+          {
+            "node": "Responder envío exitoso",
             "type": "main",
             "index": 0
           }
